@@ -273,9 +273,7 @@ export default function Page() {
     ? availableUnimodals.reduce((acc, row) => acc + row.score, 0) / availableUnimodals.length
     : null;
   const avgUnimodalTop = avgUnimodalScore !== null ? topClassFromDroneProb(avgUnimodalScore) : null;
-  const avgUnimodalLabel = availableUnimodals.length
-    ? `Avg Unimodal (${availableUnimodals.map((m) => m.name).join("+")})`
-    : "Avg Unimodal";
+  const avgUnimodalLabel = "Avg Unimodal";
   const delta = frame && avgUnimodalScore !== null ? frame.modality_scores.fusion - avgUnimodalScore : 0;
   const deltaSignedPct = `${delta >= 0 ? "+" : ""}${(delta * 100).toFixed(1)}%`;
 
