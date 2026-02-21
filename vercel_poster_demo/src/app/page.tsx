@@ -78,8 +78,8 @@ function getScenarioVideoFilter(scenarioId: string): string {
 
 export default function Page() {
   const [demo, setDemo] = useState<DemoData | null>(null);
-  const [audio, setAudio] = useState<AudioSample[]>([]);
-  const [radar, setRadar] = useState<RadarRow[]>([]);
+  const [audioByScenario, setAudioByScenario] = useState<Record<string, AudioSample[]>>({});
+  const [radarByScenario, setRadarByScenario] = useState<Record<string, RadarRow[]>>({});
   const [downloadables, setDownloadables] = useState<Downloadable[]>([]);
   const [fusionMetrics, setFusionMetrics] = useState<FusionMetricRow[]>([]);
   const [unimodalMetrics, setUnimodalMetrics] = useState<UnimodalMetricRow[]>([]);
@@ -102,10 +102,10 @@ export default function Page() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [scenarioRes, audioRes, radarRes, downloadsRes, fusionMetricsRes, unimodalMetricsRes] = await Promise.all([
+        const [scenarioRes, audioMapRes, radarMapRes, downloadsRes, fusionMetricsRes, unimodalMetricsRes] = await Promise.all([
           fetch("/demo/scenarios.json", { cache: "no-store" }),
-          fetch("/demo/data/audio_features.json", { cache: "force-cache" }),
-          fetch("/demo/data/radar_features.json", { cache: "force-cache" }),
+          fetch("/demo/data/audio_features_by_scenario.json", { cache: "force-cache" }),
+          fetch("/demo/data/radar_features_by_scenario.json", { cache: "force-cache" }),
           fetch("/demo/downloadables/manifest.json", { cache: "no-store" }),
           fetch("/demo/data/metrics_fusion.json", { cache: "force-cache" }),
           fetch("/demo/data/metrics_unimodal.json", { cache: "force-cache" }),
@@ -118,15 +118,15 @@ export default function Page() {
         }
         const parsedDemo = scenarioPayload as DemoData;
 
-        const parsedAudio = audioRes.ok ? ((await audioRes.json()) as AudioSample[]) : [];
-        const parsedRadar = radarRes.ok ? ((await radarRes.json()) as RadarRow[]) : [];
+        const parsedAudioMap = audioMapRes.ok ? ((await audioMapRes.json()) as Record<string, AudioSample[]>) : {};
+        const parsedRadarMap = radarMapRes.ok ? ((await radarMapRes.json()) as Record<string, RadarRow[]>) : {};
         const parsedDownloads = downloadsRes.ok ? ((await downloadsRes.json()) as Downloadable[]) : [];
         const parsedFusionMetrics = fusionMetricsRes.ok ? ((await fusionMetricsRes.json()) as FusionMetricRow[]) : [];
         const parsedUnimodalMetrics = unimodalMetricsRes.ok ? ((await unimodalMetricsRes.json()) as UnimodalMetricRow[]) : [];
 
         setDemo(parsedDemo);
-        setAudio(Array.isArray(parsedAudio) ? parsedAudio : []);
-        setRadar(Array.isArray(parsedRadar) ? parsedRadar : []);
+        setAudioByScenario(parsedAudioMap && typeof parsedAudioMap === "object" ? parsedAudioMap : {});
+        setRadarByScenario(parsedRadarMap && typeof parsedRadarMap === "object" ? parsedRadarMap : {});
         setDownloadables(Array.isArray(parsedDownloads) ? parsedDownloads : []);
         setFusionMetrics(Array.isArray(parsedFusionMetrics) ? parsedFusionMetrics : []);
         setUnimodalMetrics(Array.isArray(parsedUnimodalMetrics) ? parsedUnimodalMetrics : []);
@@ -270,11 +270,14 @@ export default function Page() {
     return "Hard case across models.";
   })();
 
-  const currentRadarRow = useMemo(() => {
-    if (!radar.length || !frame) return null;
-    const row = radar.find((r) => Number(r.frame_idx) === frame.frame_idx);
-    return row ?? radar[0] ?? null;
-  }, [radar, frame]);
+  const scenarioAudio = useMemo(
+    () => (scenario ? audioByScenario[scenario.id] ?? [] : []),
+    [audioByScenario, scenario],
+  );
+  const scenarioRadar = useMemo(
+    () => (scenario ? radarByScenario[scenario.id] ?? [] : []),
+    [radarByScenario, scenario],
+  );
 
   const testFusionMetrics = useMemo(
     () => fusionMetrics.filter((m) => m.split.toLowerCase() === "test"),
@@ -465,10 +468,10 @@ export default function Page() {
             </div>
           </div>
 
-          {audio.length || radar.length ? (
-            <div className={`grid gap-3 ${audio.length && radar.length ? "md:grid-cols-2" : "md:grid-cols-1"}`}>
-              {audio.length ? <AudioWaveform samples={audio} currentTime={currentTime} /> : null}
-              {radar.length ? <RadarSnapshot row={currentRadarRow} /> : null}
+          {scenarioAudio.length || scenarioRadar.length ? (
+            <div className={`grid gap-3 ${scenarioAudio.length && scenarioRadar.length ? "md:grid-cols-2" : "md:grid-cols-1"}`}>
+              {scenarioAudio.length ? <AudioWaveform samples={scenarioAudio} currentTime={currentTime} quality={scenario.quality.audio} /> : null}
+              {scenarioRadar.length ? <RadarSnapshot rows={scenarioRadar} currentFrameIdx={frameIdx} quality={scenario.quality.radar} /> : null}
             </div>
           ) : null}
         </div>

@@ -39,6 +39,8 @@ Scenario visuals are deterministic condition variants of one base clip, while sc
 ## Data Format
 
 - Scenario source: `public/demo/scenarios.json`
+- Scenario audio features: `public/demo/data/audio_features_by_scenario.json`
+- Scenario radar features: `public/demo/data/radar_features_by_scenario.json`
 - Coordinate modes:
   - `coordinate_type: "pixel"` means boxes are in source pixel coordinates and scaled by `source_resolution`
   - `coordinate_type: "normalized"` means boxes are in `[0,1]`
