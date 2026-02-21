@@ -285,7 +285,7 @@ export default function Page() {
         <div className="grid gap-3 md:grid-cols-[1fr_2fr_1fr] md:items-center">
           <div>
             <h1 className={`${posterMode ? "text-3xl" : "text-2xl"} font-black leading-tight text-slate-900`}>
-              UAV Multimodal Fusion | ISEF Demo
+              UAV Multimodal Fusion Demo
             </h1>
           </div>
 
@@ -424,6 +424,9 @@ export default function Page() {
             ) : (
               <div className="text-sm text-slate-500">Fusion metric table not available.</div>
             )}
+            <div className="mt-2 rounded-lg border border-cyan-200 bg-cyan-50 px-2 py-1 text-xs font-semibold text-cyan-900">
+              This table is the authoritative ranking for the full TEST split.
+            </div>
           </section>
 
           <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
@@ -462,6 +465,9 @@ export default function Page() {
                   {showComparison ? "Collapse" : "Expand"}
                 </button>
               ) : null}
+            </div>
+            <div className="mb-2 rounded border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-semibold text-slate-700">
+              Frame-level confidence snapshot (not a full-dataset ranking).
             </div>
 
             {showComparison ? (
