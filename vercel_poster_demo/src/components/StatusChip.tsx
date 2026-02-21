@@ -1,4 +1,4 @@
-﻿import { qualityColor } from "@/lib/classUtils";
+import { qualityColor } from "@/lib/classUtils";
 import { Quality } from "@/lib/types";
 
 type Props = {

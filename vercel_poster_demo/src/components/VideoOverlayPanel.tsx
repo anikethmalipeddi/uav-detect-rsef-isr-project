@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { RefObject, useEffect, useRef } from "react";
 import { Box, FrameRow } from "@/lib/types";

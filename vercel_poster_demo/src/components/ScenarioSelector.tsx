@@ -1,4 +1,4 @@
-﻿import { Scenario } from "@/lib/types";
+import { Scenario } from "@/lib/types";
 
 type Props = {
   scenarios: Scenario[];

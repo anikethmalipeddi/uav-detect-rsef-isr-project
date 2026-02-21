@@ -1,4 +1,4 @@
-﻿export type Quality = "good" | "degraded" | "missing";
+export type Quality = "good" | "degraded" | "missing";
 
 export type ClassLabel = "DRONE" | "AIRPLANE" | "BIRD" | "HELICOPTER";
 

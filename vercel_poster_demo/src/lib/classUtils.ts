@@ -1,4 +1,4 @@
-﻿import { ClassLabel } from "@/lib/types";
+import { ClassLabel } from "@/lib/types";
 
 const NON_DRONE_PRIORS: Record<Exclude<ClassLabel, "DRONE">, number> = {
   AIRPLANE: 0.3247,

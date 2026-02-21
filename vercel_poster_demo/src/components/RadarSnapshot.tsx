@@ -1,4 +1,4 @@
-﻿import { RadarRow } from "@/lib/types";
+import { RadarRow } from "@/lib/types";
 
 type Props = {
   row: RadarRow | null;

@@ -1,4 +1,4 @@
-﻿import { AudioSample } from "@/lib/types";
+import { AudioSample } from "@/lib/types";
 
 type Props = {
   samples: AudioSample[];
