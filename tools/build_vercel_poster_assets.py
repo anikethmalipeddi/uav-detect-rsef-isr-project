@@ -90,6 +90,10 @@ def main() -> int:
     write_json(DATA_DIR / "stress_radar_clutter.json", df_to_records(PKG / "tables" / "stress_radar_clutter.csv"))
     latency = json.loads((PKG / "metrics" / "latency_summary.json").read_text(encoding="utf-8"))
     write_json(DATA_DIR / "latency_summary.json", latency)
+    audio_features = pd.read_csv(PKG / "demo" / "assets" / "sample_audio_features.csv")
+    write_json(DATA_DIR / "audio_features.json", audio_features.to_dict(orient="records"))
+    radar_features = pd.read_csv(PKG / "demo" / "assets" / "sample_radar_features.csv")
+    write_json(DATA_DIR / "radar_features.json", radar_features.to_dict(orient="records"))
 
     # Small visual assets.
     sample_frame_dst = ASSETS_DIR / "sample_frame.png"

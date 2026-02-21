@@ -1,5 +1,5 @@
 :root {
-  --bg: #f3f5f7;
+  --bg: #eef2f7;
   --card: #ffffff;
   --text: #1f2937;
   --muted: #6b7280;
@@ -15,7 +15,7 @@ body {
   margin: 0;
   font-family: "Segoe UI", -apple-system, sans-serif;
   color: var(--text);
-  background: linear-gradient(180deg, #eef2f7, var(--bg));
+  background: radial-gradient(circle at 15% 0%, #f8fafc, var(--bg));
 }
 
 .topbar {
@@ -31,6 +31,7 @@ body {
 .topbar h1 {
   margin: 0;
   font-size: 1.5rem;
+  line-height: 1.2;
 }
 
 .topbar p {
@@ -44,7 +45,7 @@ body {
   border: 1px solid #34d399;
   border-radius: 999px;
   padding: 0.35rem 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
 }
 
@@ -64,9 +65,13 @@ body {
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
+.card h2 {
+  margin-top: 0.15rem;
+}
+
 .controls { grid-column: span 4; }
-.media { grid-column: span 4; }
-.scores { grid-column: span 4; }
+.evidence { grid-column: span 8; }
+.modality { grid-column: span 4; }
 .wide { grid-column: span 6; }
 
 .main-image {
@@ -90,15 +95,6 @@ body {
   gap: 0.5rem;
 }
 
-select {
-  width: 100%;
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  background: #fff;
-  padding: 0.45rem 0.55rem;
-  font-size: 0.95rem;
-}
-
 button {
   border: 1px solid var(--line);
   background: #fff;
@@ -106,12 +102,17 @@ button {
   border-radius: 8px;
   padding: 0.45rem 0.7rem;
   cursor: pointer;
+  font-weight: 600;
 }
 
 button.active {
   background: var(--accent);
   color: #fff;
   border-color: var(--accent);
+}
+
+button:hover {
+  background: #f8fafc;
 }
 
 .muted {
@@ -143,30 +144,18 @@ button.active {
 }
 
 .metric.fusion {
-  grid-column: span 2;
   background: #ecfeff;
 }
 
-.score-grid.single .metric.fusion {
-  grid-column: span 1;
-}
-
 .metric.hero strong {
-  font-size: 1.5rem;
+  font-size: 1.6rem;
 }
 
 .stats-list {
   margin-top: 0.6rem;
   display: grid;
-  gap: 0.25rem;
-  font-size: 0.95rem;
-}
-
-.quality {
-  margin-top: 0.7rem;
-  display: grid;
-  grid-template-columns: 1fr;
   gap: 0.3rem;
+  font-size: 0.97rem;
 }
 
 .chart {
@@ -197,8 +186,12 @@ th, td {
   font-size: 0.9rem;
 }
 
-@media (max-width: 1100px) {
-  .controls, .media, .scores, .wide {
+@media (max-width: 1200px) {
+  .controls,
+  .evidence,
+  .modality,
+  .wide {
     grid-column: span 12;
   }
 }
+

@@ -1,12 +1,14 @@
 {
   "source": "final_isef_package",
   "data_files": [
+    "audio_features.json",
     "latency_summary.json",
     "manifest.json",
     "metrics_fusion.json",
     "metrics_unimodal.json",
     "missing_modality.json",
     "predictions.json",
+    "radar_features.json",
     "stress_audio_snr.json",
     "stress_radar_clutter.json",
     "stress_vision_corruptions.json"
