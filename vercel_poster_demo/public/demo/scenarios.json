@@ -4,7 +4,7 @@
                  "version":  "2026-final",
                  "fusion_primary_model":  "F-GATE-NOQ",
                  "fusion_weights_source":  "F-GATE frame weights",
-                 "notes":  "Scores are precomputed from final run artifacts; overlays are frame-aligned for the demo clip.",
+                 "notes":  "Scenario variants reuse one base clip with deterministic condition transforms; scores/weights are precomputed from final run artifacts.",
                  "default_scenarios":  [
                                            "clean",
                                            "vision_degraded",
@@ -33,7 +33,7 @@
                       {
                           "id":  "clean",
                           "title":  "Easy daylight",
-                          "demonstrates":  "Baseline across all available modalities.",
+                          "demonstrates":  "Baseline condition (all modalities available).",
                           "wow":  false,
                           "wow_tag":  "",
                           "ground_truth":  {
@@ -5017,7 +5017,7 @@
                       {
                           "id":  "vision_degraded",
                           "title":  "Low-light / IR",
-                          "demonstrates":  "Vision degrades; fusion remains stable.",
+                          "demonstrates":  "Vision degraded; adaptive fusion stays robust.",
                           "wow":  false,
                           "wow_tag":  "",
                           "ground_truth":  {
@@ -10001,7 +10001,7 @@
                       {
                           "id":  "audio_degraded",
                           "title":  "Noisy audio",
-                          "demonstrates":  "Audio quality drops under noise.",
+                          "demonstrates":  "Audio degraded; gate shifts toward vision/radar.",
                           "wow":  false,
                           "wow_tag":  "",
                           "ground_truth":  {
@@ -14984,8 +14984,8 @@
                       },
                       {
                           "id":  "radar_clutter",
-                          "title":  "Occlusion / clutter",
-                          "demonstrates":  "Radar clutter increases and gate down-weights radar.",
+                          "title":  "Radar clutter",
+                          "demonstrates":  "Radar clutter rises; gate down-weights radar.",
                           "wow":  false,
                           "wow_tag":  "",
                           "ground_truth":  {
@@ -19968,8 +19968,8 @@
                       },
                       {
                           "id":  "missing_vision",
-                          "title":  "Tiny far target",
-                          "demonstrates":  "WOW: vision missing, fusion recovers from audio+radar.",
+                          "title":  "Vision dropout",
+                          "demonstrates":  "WOW: vision unavailable, fusion uses audio+radar.",
                           "wow":  true,
                           "wow_tag":  "WOW #1",
                           "ground_truth":  {
@@ -24953,7 +24953,7 @@
                       {
                           "id":  "missing_radar",
                           "title":  "Radar dropout",
-                          "demonstrates":  "WOW: radar missing and fusion stays strong.",
+                          "demonstrates":  "WOW: radar unavailable, fusion uses vision+audio.",
                           "wow":  true,
                           "wow_tag":  "WOW #2",
                           "ground_truth":  {
@@ -29937,7 +29937,7 @@
                       {
                           "id":  "missing_audio",
                           "title":  "Audio dropout",
-                          "demonstrates":  "Audio missing while fusion falls back to vision+radar.",
+                          "demonstrates":  "Audio unavailable; fusion uses vision+radar.",
                           "wow":  false,
                           "wow_tag":  "",
                           "ground_truth":  {

@@ -2,6 +2,8 @@
 
 This folder contains the visual-first judge demo for multimodal UAV detection using precomputed outputs from the final run. The app is designed for a 60-120 second walkthrough showing: detector operation, fusion-vs-unimodal behavior on hard cases, and adaptive fusion weighting under degradation/missingness.
 
+Scenario visuals are deterministic condition variants of one base clip, while scores/weights come from precomputed final-run outputs.
+
 ## Running the Demo
 
 1. `cd vercel_poster_demo`

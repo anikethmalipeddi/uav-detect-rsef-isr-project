@@ -57,6 +57,25 @@ function fmtPct(v: number): string {
   return `${(v * 100).toFixed(1)}%`;
 }
 
+function getScenarioVideoFilter(scenarioId: string): string {
+  switch (scenarioId) {
+    case "vision_degraded":
+      return "brightness(0.58) contrast(1.12) blur(1.4px)";
+    case "audio_degraded":
+      return "none";
+    case "radar_clutter":
+      return "contrast(1.06)";
+    case "missing_vision":
+      return "brightness(0.42) grayscale(1) blur(2.2px)";
+    case "missing_radar":
+      return "none";
+    case "missing_audio":
+      return "none";
+    default:
+      return "none";
+  }
+}
+
 export default function Page() {
   const [demo, setDemo] = useState<DemoData | null>(null);
   const [audio, setAudio] = useState<AudioSample[]>([]);
@@ -137,6 +156,8 @@ export default function Page() {
   const frameIdx = frame?.frame_idx ?? 0;
   const visionAvailable = scenario?.quality.vision !== "missing";
   const showVisionPanel = !posterMode && visionAvailable;
+  const scenarioVideoFilter = getScenarioVideoFilter(scenario?.id ?? "clean");
+  const fusionContextOnly = scenario?.quality.vision === "missing";
 
   useEffect(() => {
     if (!scenario) return;
@@ -350,6 +371,9 @@ export default function Page() {
           {scenario.wow ? <span className="rounded-full bg-fuchsia-100 px-3 py-1 font-bold text-fuchsia-900">{scenario.wow_tag}</span> : null}
           <span className="rounded-full bg-cyan-50 px-3 py-1 font-semibold text-cyan-900">Best fusion on test: {bestFusionRunId}</span>
         </div>
+        <div className="mt-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700">
+          Scenario visuals are deterministic condition variants of the same base recording to match stress/missing-modality cases.
+        </div>
         {bestFusionMetric ? (
           <div className="mt-2 rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-900">
             TEST PR-AUC: {bestFusionMetric.run_id} = {bestFusionMetric.pr_auc.toFixed(3)}
@@ -373,6 +397,7 @@ export default function Page() {
                 accent="#2563eb"
                 performanceStep={performanceStep}
                 badgeText={scenario.quality.vision === "degraded" ? "Vision signal (degraded)" : "Vision signal"}
+                videoFilter={scenarioVideoFilter}
               />
             ) : null}
             <VideoOverlayPanel
@@ -385,7 +410,10 @@ export default function Page() {
               sourceResolution={scenario.source_resolution}
               accent="#0f766e"
               performanceStep={performanceStep}
-              badgeText="Fusion signal"
+              badgeText={fusionContextOnly ? "Fusion signal (audio+radar)" : "Fusion signal"}
+              showBoxes={!fusionContextOnly}
+              videoFilter={scenarioVideoFilter}
+              contextNote={fusionContextOnly ? "Video shown for context only; vision modality is disabled." : undefined}
             />
           </div>
 
