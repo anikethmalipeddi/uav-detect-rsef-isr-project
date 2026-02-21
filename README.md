@@ -123,5 +123,4 @@ python -m src.eval.stress_tests --episodes data/processed/episodes/episodes.csv 
   ```
 - Run metadata is written to `results/run_metadata.json` with machine, torch/cuda, git hash, dataset state, and warnings.
 
-## ISEF AI/Tool Acknowledgement
-Track AI/tool usage in your report and document what was generated vs. authored by you. Keep final narrative in your own words.
+
