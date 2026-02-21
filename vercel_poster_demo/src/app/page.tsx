@@ -17,6 +17,12 @@ type FusionMetricRow = {
   pr_auc: number;
   roc_auc: number;
 };
+type UnimodalMetricRow = {
+  run_id: string;
+  split: string;
+  pr_auc: number;
+  roc_auc: number;
+};
 
 function validateDemoData(payload: unknown): payload is DemoData {
   if (!payload || typeof payload !== "object") return false;
@@ -57,6 +63,7 @@ export default function Page() {
   const [radar, setRadar] = useState<RadarRow[]>([]);
   const [downloadables, setDownloadables] = useState<Downloadable[]>([]);
   const [fusionMetrics, setFusionMetrics] = useState<FusionMetricRow[]>([]);
+  const [unimodalMetrics, setUnimodalMetrics] = useState<UnimodalMetricRow[]>([]);
 
   const [error, setError] = useState<string>("");
   const [scenarioId, setScenarioId] = useState<string>("");
@@ -76,12 +83,13 @@ export default function Page() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [scenarioRes, audioRes, radarRes, downloadsRes, fusionMetricsRes] = await Promise.all([
+        const [scenarioRes, audioRes, radarRes, downloadsRes, fusionMetricsRes, unimodalMetricsRes] = await Promise.all([
           fetch("/demo/scenarios.json", { cache: "no-store" }),
           fetch("/demo/data/audio_features.json", { cache: "force-cache" }),
           fetch("/demo/data/radar_features.json", { cache: "force-cache" }),
           fetch("/demo/downloadables/manifest.json", { cache: "no-store" }),
           fetch("/demo/data/metrics_fusion.json", { cache: "force-cache" }),
+          fetch("/demo/data/metrics_unimodal.json", { cache: "force-cache" }),
         ]);
 
         if (!scenarioRes.ok) throw new Error(`Failed to load scenarios.json (${scenarioRes.status}).`);
@@ -95,12 +103,14 @@ export default function Page() {
         const parsedRadar = radarRes.ok ? ((await radarRes.json()) as RadarRow[]) : [];
         const parsedDownloads = downloadsRes.ok ? ((await downloadsRes.json()) as Downloadable[]) : [];
         const parsedFusionMetrics = fusionMetricsRes.ok ? ((await fusionMetricsRes.json()) as FusionMetricRow[]) : [];
+        const parsedUnimodalMetrics = unimodalMetricsRes.ok ? ((await unimodalMetricsRes.json()) as UnimodalMetricRow[]) : [];
 
         setDemo(parsedDemo);
         setAudio(Array.isArray(parsedAudio) ? parsedAudio : []);
         setRadar(Array.isArray(parsedRadar) ? parsedRadar : []);
         setDownloadables(Array.isArray(parsedDownloads) ? parsedDownloads : []);
         setFusionMetrics(Array.isArray(parsedFusionMetrics) ? parsedFusionMetrics : []);
+        setUnimodalMetrics(Array.isArray(parsedUnimodalMetrics) ? parsedUnimodalMetrics : []);
 
         const defaultScenario = parsedDemo.meta.default_scenarios?.[0] || parsedDemo.scenarios[0]?.id || "";
         setScenarioId(defaultScenario);
@@ -258,6 +268,18 @@ export default function Page() {
     const row = downloadables.find((d) => d.name === "ablation_bars.png");
     return row?.path || null;
   }, [downloadables]);
+  const leaderboardRows = useMemo(() => {
+    const combined = [...testFusionMetrics, ...unimodalMetrics.filter((m) => m.split.toLowerCase() === "test")];
+    return combined.sort((a, b) => b.pr_auc - a.pr_auc);
+  }, [testFusionMetrics, unimodalMetrics]);
+
+  const signalLabel = (score: number, missing: boolean): string => {
+    if (missing) return "N/A";
+    if (score >= 0.6) return "Strong";
+    if (score >= 0.52) return "Moderate";
+    if (score >= 0.45) return "Uncertain";
+    return "Weak";
+  };
 
   if (error) {
     return (
@@ -336,6 +358,7 @@ export default function Page() {
                 sourceResolution={scenario.source_resolution}
                 accent="#2563eb"
                 performanceStep={performanceStep}
+                badgeText={scenario.quality.vision === "degraded" ? "Vision signal (degraded)" : "Vision signal"}
               />
             ) : null}
             <VideoOverlayPanel
@@ -348,6 +371,7 @@ export default function Page() {
               sourceResolution={scenario.source_resolution}
               accent="#0f766e"
               performanceStep={performanceStep}
+              badgeText="Fusion signal"
             />
           </div>
 
@@ -430,6 +454,24 @@ export default function Page() {
           </section>
 
           <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
+            <h3 className={`${posterMode ? "text-2xl" : "text-xl"} mb-2 font-black text-slate-900`}>Overall Leaderboard (Test)</h3>
+            <div className="space-y-1 text-sm">
+              {leaderboardRows.map((m, idx) => {
+                const isBest = idx === 0;
+                return (
+                  <div
+                    key={`${m.run_id}-${m.split}`}
+                    className={`flex items-center justify-between rounded px-2 py-1 ${isBest ? "bg-emerald-50 font-bold text-emerald-900" : "bg-slate-50 text-slate-800"}`}
+                  >
+                    <span>{m.run_id}</span>
+                    <span>PR-AUC {m.pr_auc.toFixed(3)}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
             <h3 className={`${posterMode ? "text-2xl" : "text-xl"} mb-2 font-black text-slate-900`}>Fusion Weights (Adaptive)</h3>
             <div className="space-y-2">
               {([
@@ -456,7 +498,7 @@ export default function Page() {
 
           <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
-              <h3 className={`${posterMode ? "text-2xl" : "text-xl"} font-black text-slate-900`}>Model Comparison</h3>
+              <h3 className={`${posterMode ? "text-2xl" : "text-xl"} font-black text-slate-900`}>Live Signal Snapshot</h3>
               {posterMode ? (
                 <button
                   onClick={() => setShowComparison((v) => !v)}
@@ -467,7 +509,7 @@ export default function Page() {
               ) : null}
             </div>
             <div className="mb-2 rounded border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-semibold text-slate-700">
-              Frame-level confidence snapshot (not a full-dataset ranking).
+              Frame-level snapshot only. Use leaderboard/test tables for model ranking.
             </div>
 
             {showComparison ? (
@@ -479,6 +521,7 @@ export default function Page() {
                   { name: "Fusion", top: fusionTop, prob: frame.modality_scores.fusion, missing: false },
                 ].map((row) => {
                   const correct = !row.missing && row.top.label === gt;
+                  const signal = signalLabel(row.prob, row.missing);
                   return (
                     <div key={row.name} className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5">
                       <span className="font-semibold text-slate-800">{row.name}</span>
@@ -486,7 +529,7 @@ export default function Page() {
                         <span className="text-slate-500">N/A</span>
                       ) : (
                         <span className="font-bold text-slate-900">
-                          {row.top.label} {fmtPct(row.prob)} {correct ? "OK" : "X"}
+                          {row.top.label} {signal} {correct ? "OK" : "X"}
                         </span>
                       )}
                     </div>

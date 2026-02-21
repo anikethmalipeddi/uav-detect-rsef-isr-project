@@ -14,6 +14,7 @@ type Props = {
   accent: string;
   performanceStep: number;
   hidden?: boolean;
+  badgeText?: string;
 };
 
 function toCanvasBox(
@@ -51,6 +52,7 @@ export default function VideoOverlayPanel({
   accent,
   performanceStep,
   hidden = false,
+  badgeText,
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -125,13 +127,14 @@ export default function VideoOverlayPanel({
       ? frame.modality_scores.vision
       : frame.modality_scores.fusion
     : 0;
+  const badge = badgeText ?? `DRONE ${(topScore * 100).toFixed(1)}%`;
 
   return (
     <section className={`${hidden ? "hidden" : "flex"} min-w-0 flex-1 flex-col rounded-2xl border border-slate-300 bg-white p-3 shadow-sm`}>
       <div className="mb-2 flex items-center justify-between">
         <h3 className="text-lg font-bold text-slate-900">{label}</h3>
         <div className="rounded-lg bg-slate-100 px-3 py-1 text-lg font-black text-slate-900">
-          DRONE {(topScore * 100).toFixed(1)}%
+          {badge}
         </div>
       </div>
 
