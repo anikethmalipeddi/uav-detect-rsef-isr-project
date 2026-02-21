@@ -14,17 +14,30 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from demo_app.demo_utils import (
-    ensure_dir,
-    read_json,
-    recompute_row_with_controls,
-    repo_root,
-    resolve_mode,
-    scripted_steps,
-    summarize_export_caption,
-    timestamp_slug,
-)
-from demo_app.model_adapters.poster_mode import PosterModeAdapter
+try:
+    from demo_utils import (
+        ensure_dir,
+        read_json,
+        recompute_row_with_controls,
+        repo_root,
+        resolve_mode,
+        scripted_steps,
+        summarize_export_caption,
+        timestamp_slug,
+    )
+    from model_adapters.poster_mode import PosterModeAdapter
+except ModuleNotFoundError:
+    from demo_app.demo_utils import (
+        ensure_dir,
+        read_json,
+        recompute_row_with_controls,
+        repo_root,
+        resolve_mode,
+        scripted_steps,
+        summarize_export_caption,
+        timestamp_slug,
+    )
+    from demo_app.model_adapters.poster_mode import PosterModeAdapter
 
 
 ROOT = repo_root()

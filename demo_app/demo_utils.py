@@ -98,7 +98,10 @@ def resolve_mode(preferred_mode: str, root: Path, models_dir: Path) -> ModeResol
 
     normalized = preferred_mode.strip().lower()
     if normalized == "full":
-        from demo_app.model_adapters.full_mode import FullModeAdapter
+        try:
+            from model_adapters.full_mode import FullModeAdapter
+        except ModuleNotFoundError:
+            from demo_app.model_adapters.full_mode import FullModeAdapter
 
         adapter = FullModeAdapter(models_dir=models_dir)
         ok, reason = adapter.is_available()
@@ -319,4 +322,3 @@ def write_csv(path: Path, fieldnames: Sequence[str], rows: Iterable[Dict[str, ob
         writer.writeheader()
         for row in rows:
             writer.writerow(row)
-

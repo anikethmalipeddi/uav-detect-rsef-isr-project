@@ -79,6 +79,19 @@ powershell -ExecutionPolicy Bypass -File .\scripts\run_sanity.ps1
   bash scripts/run_demo.sh
   ```
 
+## Vercel Poster Mode
+- Static Poster Mode app (no live inference): `vercel_poster_demo/`
+- Build/update poster-mode JSON assets from final package:
+  ```powershell
+  C:\Users\Aniketh\miniforge3\envs\uavmm\python.exe tools/build_vercel_poster_assets.py
+  ```
+- Deploy on Vercel using root `vercel.json`.
+- Local static preview:
+  ```powershell
+  python -m http.server 8080
+  ```
+  Open `http://localhost:8080/vercel_poster_demo/`.
+
 ## Data Setup
 1. Clone DroneDetectionThesis into `data/raw/dronedetect_thesis`.
 2. Download TSMS data into `data/raw/tsms_drone`.

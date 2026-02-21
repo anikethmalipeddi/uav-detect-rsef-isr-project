@@ -1,0 +1,222 @@
+[
+  {
+    "run_id": "F-AVG",
+    "split": "test",
+    "pr_auc": 0.8505706105691948,
+    "roc_auc": 0.8473249999999999,
+    "tn": 123,
+    "fp": 77,
+    "fn": 25,
+    "tp": 175,
+    "snr_db": 30
+  },
+  {
+    "run_id": "F-STATIC",
+    "split": "test",
+    "pr_auc": 0.8845568501010077,
+    "roc_auc": 0.8851999999999999,
+    "tn": 159,
+    "fp": 41,
+    "fn": 37,
+    "tp": 163,
+    "snr_db": 30
+  },
+  {
+    "run_id": "F-GATE",
+    "split": "test",
+    "pr_auc": 0.8877367701233505,
+    "roc_auc": 0.883525,
+    "tn": 156,
+    "fp": 44,
+    "fn": 31,
+    "tp": 169,
+    "snr_db": 30
+  },
+  {
+    "run_id": "F-GATE-NOQ",
+    "split": "test",
+    "pr_auc": 0.8941218958376587,
+    "roc_auc": 0.8896499999999999,
+    "tn": 156,
+    "fp": 44,
+    "fn": 34,
+    "tp": 166,
+    "snr_db": 30
+  },
+  {
+    "run_id": "F-AVG",
+    "split": "test",
+    "pr_auc": 0.8340313527222671,
+    "roc_auc": 0.833375,
+    "tn": 122,
+    "fp": 78,
+    "fn": 29,
+    "tp": 171,
+    "snr_db": 20
+  },
+  {
+    "run_id": "F-STATIC",
+    "split": "test",
+    "pr_auc": 0.8590905902480157,
+    "roc_auc": 0.859825,
+    "tn": 164,
+    "fp": 36,
+    "fn": 46,
+    "tp": 154,
+    "snr_db": 20
+  },
+  {
+    "run_id": "F-GATE",
+    "split": "test",
+    "pr_auc": 0.8457837188180779,
+    "roc_auc": 0.85705,
+    "tn": 156,
+    "fp": 44,
+    "fn": 42,
+    "tp": 158,
+    "snr_db": 20
+  },
+  {
+    "run_id": "F-GATE-NOQ",
+    "split": "test",
+    "pr_auc": 0.8552442110555909,
+    "roc_auc": 0.8633,
+    "tn": 158,
+    "fp": 42,
+    "fn": 41,
+    "tp": 159,
+    "snr_db": 20
+  },
+  {
+    "run_id": "F-AVG",
+    "split": "test",
+    "pr_auc": 0.7710605654479838,
+    "roc_auc": 0.7738250000000001,
+    "tn": 115,
+    "fp": 85,
+    "fn": 40,
+    "tp": 160,
+    "snr_db": 10
+  },
+  {
+    "run_id": "F-STATIC",
+    "split": "test",
+    "pr_auc": 0.7876288008024873,
+    "roc_auc": 0.787125,
+    "tn": 150,
+    "fp": 50,
+    "fn": 60,
+    "tp": 140,
+    "snr_db": 10
+  },
+  {
+    "run_id": "F-GATE",
+    "split": "test",
+    "pr_auc": 0.7605410562796382,
+    "roc_auc": 0.7806249999999999,
+    "tn": 144,
+    "fp": 56,
+    "fn": 53,
+    "tp": 147,
+    "snr_db": 10
+  },
+  {
+    "run_id": "F-GATE-NOQ",
+    "split": "test",
+    "pr_auc": 0.7691815681921732,
+    "roc_auc": 0.7883500000000001,
+    "tn": 144,
+    "fp": 56,
+    "fn": 51,
+    "tp": 149,
+    "snr_db": 10
+  },
+  {
+    "run_id": "F-AVG",
+    "split": "test",
+    "pr_auc": 0.7491758248614522,
+    "roc_auc": 0.7521749999999999,
+    "tn": 123,
+    "fp": 77,
+    "fn": 51,
+    "tp": 149,
+    "snr_db": 0
+  },
+  {
+    "run_id": "F-STATIC",
+    "split": "test",
+    "pr_auc": 0.7316641149026983,
+    "roc_auc": 0.73885,
+    "tn": 132,
+    "fp": 68,
+    "fn": 69,
+    "tp": 131,
+    "snr_db": 0
+  },
+  {
+    "run_id": "F-GATE",
+    "split": "test",
+    "pr_auc": 0.7086826766452103,
+    "roc_auc": 0.72625,
+    "tn": 130,
+    "fp": 70,
+    "fn": 62,
+    "tp": 138,
+    "snr_db": 0
+  },
+  {
+    "run_id": "F-GATE-NOQ",
+    "split": "test",
+    "pr_auc": 0.7139119314859809,
+    "roc_auc": 0.7310500000000001,
+    "tn": 130,
+    "fp": 70,
+    "fn": 62,
+    "tp": 138,
+    "snr_db": 0
+  },
+  {
+    "run_id": "F-AVG",
+    "split": "test",
+    "pr_auc": 0.7465500448390765,
+    "roc_auc": 0.7325,
+    "tn": 134,
+    "fp": 66,
+    "fn": 62,
+    "tp": 138,
+    "snr_db": -10
+  },
+  {
+    "run_id": "F-STATIC",
+    "split": "test",
+    "pr_auc": 0.7148566487350756,
+    "roc_auc": 0.7150999999999998,
+    "tn": 144,
+    "fp": 56,
+    "fn": 77,
+    "tp": 123,
+    "snr_db": -10
+  },
+  {
+    "run_id": "F-GATE",
+    "split": "test",
+    "pr_auc": 0.7014056891396641,
+    "roc_auc": 0.70295,
+    "tn": 140,
+    "fp": 60,
+    "fn": 73,
+    "tp": 127,
+    "snr_db": -10
+  },
+  {
+    "run_id": "F-GATE-NOQ",
+    "split": "test",
+    "pr_auc": 0.7054865297087332,
+    "roc_auc": 0.707225,
+    "tn": 143,
+    "fp": 57,
+    "fn": 72,
+    "tp": 128,
+    "snr_db": -10
+  }
+]

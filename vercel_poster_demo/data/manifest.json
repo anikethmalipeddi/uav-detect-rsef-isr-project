@@ -1,0 +1,20 @@
+{
+  "source": "final_isef_package",
+  "data_files": [
+    "latency_summary.json",
+    "manifest.json",
+    "metrics_fusion.json",
+    "metrics_unimodal.json",
+    "missing_modality.json",
+    "predictions.json",
+    "stress_audio_snr.json",
+    "stress_radar_clutter.json",
+    "stress_vision_corruptions.json"
+  ],
+  "asset_files": [
+    "ablation_bars.png",
+    "qualitative_overlays_grid.png",
+    "sample_frame.png",
+    "stress_audio_snr_curve.png"
+  ]
+}
