@@ -265,29 +265,34 @@ export default function Page() {
         { name: "Radar", score: frame.modality_scores.radar, top: radarTop, missing: scenario?.quality.radar === "missing" },
       ]
     : [];
-  const bestUnimodal = unimodalSnapshot.length
-    ? [...unimodalSnapshot.filter((m) => !m.missing)].sort((a, b) => b.score - a.score)[0] ?? null
+  const availableUnimodals = unimodalSnapshot.filter((m) => !m.missing);
+  const avgUnimodalScore = availableUnimodals.length
+    ? availableUnimodals.reduce((acc, row) => acc + row.score, 0) / availableUnimodals.length
     : null;
-  const delta = frame && bestUnimodal ? frame.modality_scores.fusion - bestUnimodal.score : 0;
+  const avgUnimodalTop = avgUnimodalScore !== null ? topClassFromDroneProb(avgUnimodalScore) : null;
+  const avgUnimodalLabel = availableUnimodals.length
+    ? `avg unimodal (${availableUnimodals.map((m) => m.name).join("+")})`
+    : "avg unimodal";
+  const delta = frame && avgUnimodalScore !== null ? frame.modality_scores.fusion - avgUnimodalScore : 0;
 
   const deltaMessage = (() => {
-    if (!bestUnimodal) return "No unimodal comparator available for this scenario frame.";
-    if (bestUnimodal.top.label !== gt && fusionTop.label === gt) {
-      return `Fusion correct while best unimodal (${bestUnimodal.name}) is wrong.`;
+    if (avgUnimodalScore === null || !avgUnimodalTop) return "No unimodal comparator available for this scenario frame.";
+    if (avgUnimodalTop.label !== gt && fusionTop.label === gt) {
+      return `Fusion correct while ${avgUnimodalLabel} is wrong.`;
     }
-    if (bestUnimodal.top.label === gt && fusionTop.label === gt && delta >= 0) {
-      return `Both correct; fusion vs best unimodal (${bestUnimodal.name}) +${fmtPct(delta)}.`;
+    if (avgUnimodalTop.label === gt && fusionTop.label === gt && delta >= 0) {
+      return `Both correct; fusion vs ${avgUnimodalLabel} +${fmtPct(delta)}.`;
     }
     if (fusionTop.label === gt && delta < 0) {
-      return `Fusion correct; best unimodal (${bestUnimodal.name}) has higher frame confidence by ${fmtPct(-delta)}.`;
+      return `Fusion correct; ${avgUnimodalLabel} has higher frame confidence by ${fmtPct(-delta)}.`;
     }
-    if (bestUnimodal.top.label === gt && fusionTop.label !== gt) {
-      return `Best unimodal (${bestUnimodal.name}) is correct on this frame.`;
+    if (avgUnimodalTop.label === gt && fusionTop.label !== gt) {
+      return `${avgUnimodalLabel} is correct on this frame.`;
     }
     return "Hard case across models.";
   })();
-  const deltaSummary = bestUnimodal && frame
-    ? `Fusion ${fmtPct(frame.modality_scores.fusion)} vs best unimodal (${bestUnimodal.name}) ${fmtPct(bestUnimodal.score)} (${delta >= 0 ? "+" : ""}${(delta * 100).toFixed(1)}%).`
+  const deltaSummary = avgUnimodalScore !== null && frame
+    ? `Fusion ${fmtPct(frame.modality_scores.fusion)} vs ${avgUnimodalLabel} ${fmtPct(avgUnimodalScore)} (${delta >= 0 ? "+" : ""}${(delta * 100).toFixed(1)}%).`
     : "No unimodal comparator available.";
 
   const scenarioAudio = useMemo(
