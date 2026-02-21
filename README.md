@@ -4,10 +4,12 @@ Offline, reproducible week-1 implementation for multimodal UAV presence detectio
 
 ## Scope
 - Windows-native workflow.
-- No live demo UI.
 - Core datasets only in week 1:
   - DroneDetectionThesis (vision + audio)
   - TSMS Drone dataset (radar)
+- Includes a lightweight cross-platform ISEF demo app:
+  - `Poster Mode` (offline replay, no weights)
+  - `Full Mode` (optional local weights in `models/`, auto-fallback)
 
 ## Project Layout
 ```text
@@ -60,6 +62,22 @@ Fast validation only:
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\scripts\run_sanity.ps1
 ```
+
+## Live Demo (Windows + macOS M2)
+- Demo app source: `demo_app/app.py`
+- Demo instructions: `docs/README_DEMO.md`
+- Windows:
+  ```powershell
+  conda env create -f environment_demo.yml
+  conda activate uav-demo
+  powershell -ExecutionPolicy Bypass -File .\scripts\run_demo.ps1
+  ```
+- macOS:
+  ```bash
+  conda env create -f environment_demo.yml
+  conda activate uav-demo
+  bash scripts/run_demo.sh
+  ```
 
 ## Data Setup
 1. Clone DroneDetectionThesis into `data/raw/dronedetect_thesis`.

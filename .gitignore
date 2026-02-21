@@ -37,7 +37,9 @@ final_isef_package/*
 !final_isef_package/verification/**
 !final_isef_package/metadata/
 !final_isef_package/metadata/**
+final_isef_package/demo_exports/
 runs/
+models/
 wandb/
 logs/
 *.pt
@@ -67,8 +69,19 @@ logs/
 *.csv.gz
 *.jsonl
 
+# Keep tiny committed demo assets/outputs for offline poster mode.
+!demo_assets/
+!demo_assets/**
+!demo_outputs/
+!demo_outputs/**
+!demo_app/**
+!docs/README_DEMO.md
+demo_app/**/__pycache__/
+demo_app/**/*.pyc
+
 # OS / editor
 .DS_Store
 Thumbs.db
 .vscode/
 .idea/
+.tmp/

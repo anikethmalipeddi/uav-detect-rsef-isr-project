@@ -1,0 +1,17 @@
+name: uav-demo
+channels:
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - numpy
+  - pandas
+  - matplotlib
+  - pillow
+  - pyyaml
+  - pip:
+      - streamlit>=1.36
+      - opencv-python>=4.8
+      - plotly>=5.22
+      - ultralytics>=8.2
+
