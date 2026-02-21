@@ -1,0 +1,22 @@
+﻿[
+    {
+        "name":  "ablation_bars.png",
+        "path":  "/demo/downloadables/ablation_bars.png"
+    },
+    {
+        "name":  "ablation_table.csv",
+        "path":  "/demo/downloadables/ablation_table.csv"
+    },
+    {
+        "name":  "confusion_matrix_final_norm.png",
+        "path":  "/demo/downloadables/confusion_matrix_final_norm.png"
+    },
+    {
+        "name":  "confusion_matrix_final_raw.png",
+        "path":  "/demo/downloadables/confusion_matrix_final_raw.png"
+    },
+    {
+        "name":  "pr_curve_fusion_vs_baselines.png",
+        "path":  "/demo/downloadables/pr_curve_fusion_vs_baselines.png"
+    }
+]

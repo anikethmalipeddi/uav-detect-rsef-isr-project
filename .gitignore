@@ -78,3 +78,13 @@ Thumbs.db
 .vscode/
 .idea/
 .tmp/
+
+# Next.js poster demo build outputs
+vercel_poster_demo/node_modules/
+vercel_poster_demo/.next/
+vercel_poster_demo/.vercel/
+
+# Keep committed offline demo bundle for Vercel poster mode.
+!vercel_poster_demo/public/demo/**
+!vercel_poster_demo/public/demo/videos/sample_video.mp4
+!vercel_poster_demo/public/demo/videos/sample_audio.wav

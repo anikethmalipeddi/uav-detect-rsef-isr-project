@@ -1,0 +1,10 @@
+- [ ] Vercel build passes
+- [ ] Demo loads with no external dependencies
+- [ ] Scenario switching works
+- [x] 5+ real scenarios included (no placeholders in default list)
+- [x] At least 2 WOW scenarios included and clearly labeled
+- [x] Sync play and scrubbing works (master clock + drift correction)
+- [x] Fusion weights display works
+- [x] Poster Mode works
+- [x] Demo script modal exists
+- [x] Adding a scenario instructions present

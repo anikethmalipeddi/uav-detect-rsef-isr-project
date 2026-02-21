@@ -1,0 +1,19 @@
+{
+  "source_video": "data/raw/dronedetect_thesis/Data/Video_IR/IR_DRONE_040.mp4",
+  "source_audio": "data/raw/dronedetect_thesis/Data/Audio/DRONE_001.wav",
+  "source_radar": "demo_assets/sample_radar.csv",
+  "duration_sec": 10.0,
+  "fps": 8.0,
+  "frame_step": 1,
+  "output_frame_count": 120,
+  "output_scenarios": 7,
+  "radar_rows": 120,
+  "radar_bins": 64,
+  "derived_from": [
+    "final_isef_package/tables/preds_fusion.csv",
+    "final_isef_package/tables/metrics_fusion.csv",
+    "final_isef_package/tables/stress_audio_snr.csv",
+    "final_isef_package/tables/stress_vision_corruptions.csv",
+    "final_isef_package/tables/stress_radar_clutter.csv"
+  ]
+}
