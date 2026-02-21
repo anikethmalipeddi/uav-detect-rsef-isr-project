@@ -5,6 +5,7 @@ import { Box, FrameRow } from "@/lib/types";
 
 type Props = {
   label: string;
+  titleNote?: string;
   videoRef: RefObject<HTMLVideoElement>;
   videoSrc: string;
   frame: FrameRow | null;
@@ -46,6 +47,7 @@ function toCanvasBox(
 
 export default function VideoOverlayPanel({
   label,
+  titleNote,
   videoRef,
   videoSrc,
   frame,
@@ -139,8 +141,11 @@ export default function VideoOverlayPanel({
 
   return (
     <section className={`${hidden ? "hidden" : "flex"} min-w-0 flex-1 flex-col rounded-2xl border border-slate-300 bg-white p-3 shadow-sm`}>
-      <div className="mb-2 flex items-center justify-between">
-        <h3 className="text-lg font-bold text-slate-900">{label}</h3>
+      <div className="mb-2 flex items-start justify-between gap-3">
+        <div>
+          <h3 className="text-lg font-bold text-slate-900">{label}</h3>
+          {titleNote ? <p className="text-xs font-semibold text-slate-600">{titleNote}</p> : null}
+        </div>
         <div className="rounded-lg bg-slate-100 px-3 py-1 text-lg font-black text-slate-900">
           {badge}
         </div>

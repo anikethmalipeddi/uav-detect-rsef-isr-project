@@ -158,7 +158,10 @@ export default function Page() {
   const showVisionPanel = !posterMode && visionAvailable;
   const scenarioVideoFilter = getScenarioVideoFilter(scenario?.id ?? "clean");
   const fusionContextOnly = scenario?.quality.vision === "missing";
-  const showFusionBoxes = !fusionContextOnly;
+  const showFusionBoxes = true;
+  const fusionTitleNote = showVisionPanel
+    ? "Fused predictive output (bbox + score) on the same frame for direct comparison."
+    : "Fused predictive output (bbox + score).";
   const fusionContextNote = fusionContextOnly ? "Video shown for context only; vision modality is disabled." : undefined;
 
   useEffect(() => {
@@ -433,6 +436,7 @@ export default function Page() {
             ) : null}
             <VideoOverlayPanel
               label="Fusion (F-GATE-NOQ score)"
+              titleNote={fusionTitleNote}
               videoRef={fusionVideoRef}
               videoSrc={scenario.media.video}
               frame={frame}
