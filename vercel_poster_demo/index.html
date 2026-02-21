@@ -24,8 +24,6 @@
         </div>
         <div id="judgeStepLabel" class="muted"></div>
         <div id="demoStatus" class="muted"></div>
-        <h3>Fusion Method</h3>
-        <select id="fusionMethod"></select>
         <h3>Scenario</h3>
         <div id="scenarioButtons" class="scenario-grid"></div>
         <h3>Frame</h3>
@@ -46,15 +44,17 @@
       </section>
 
       <section class="card scores">
-        <h2>Per-Modality and Fusion</h2>
-        <div class="score-grid">
-          <div class="metric"><span>Vision</span><strong id="scoreVis">0.000</strong></div>
-          <div class="metric"><span>Audio</span><strong id="scoreAud">0.000</strong></div>
-          <div class="metric"><span>Radar</span><strong id="scoreRad">0.000</strong></div>
-          <div class="metric fusion"><span id="fusionLabel">Fusion</span><strong id="scoreFusion">0.000</strong></div>
+        <h2>Best Fusion Model</h2>
+        <div class="score-grid single">
+          <div class="metric fusion hero"><span id="fusionLabel">Fusion</span><strong id="scoreFusion">0.000</strong></div>
         </div>
         <div id="fusionSummary" class="muted"></div>
-        <div class="muted">Note: these are per-frame scores. Model superiority is judged by dataset-level PR-AUC/ROC-AUC.</div>
+        <div class="stats-list">
+          <div>Best fusion (TEST): <strong id="bestFusionStat">-</strong></div>
+          <div>Best unimodal (TEST): <strong id="bestUnimodalStat">-</strong></div>
+          <div>Fusion gain (PR-AUC): <strong id="fusionGainStat">-</strong></div>
+        </div>
+        <div class="muted">Frame-level modality scores are intentionally hidden here. Superiority claim is based on test-set PR-AUC.</div>
         <div class="quality">
           <div>Audio SNR: <strong id="qSNR">-</strong> dB</div>
           <div>Vision condition: <strong id="qVision">-</strong></div>
@@ -68,7 +68,7 @@
       </section>
 
       <section class="card wide">
-        <h2>Confidence Over Time</h2>
+        <h2>Fusion Confidence Over Time</h2>
         <svg id="confChart" viewBox="0 0 760 260" class="chart"></svg>
       </section>
 
@@ -78,7 +78,7 @@
       </section>
 
       <section class="card wide">
-        <h2>Robustness Snapshot (F-GATE)</h2>
+        <h2 id="stressTitle">Robustness Snapshot</h2>
         <svg id="stressChart" viewBox="0 0 760 260" class="chart"></svg>
       </section>
 

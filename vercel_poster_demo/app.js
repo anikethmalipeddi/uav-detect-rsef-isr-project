@@ -21,7 +21,7 @@ const state = {
   dropVision: false,
   dropAudio: false,
   dropRadar: false,
-  fusionMethod: "F-GATE",
+  bestFusionMethod: "F-GATE",
   demoTimer: null
 };
 
@@ -96,13 +96,13 @@ function maskWeights(rawWeights) {
 }
 
 function fusionWeights(row, pVis, pAud, pRad) {
-  if (state.fusionMethod === "F-AVG") {
+  if (state.bestFusionMethod === "F-AVG") {
     return maskWeights([1, 1, 1]);
   }
-  if (state.fusionMethod === "F-STATIC") {
+  if (state.bestFusionMethod === "F-STATIC") {
     return maskWeights([0.2, 0.45, 0.35]);
   }
-  if (state.fusionMethod === "F-GATE-NOQ") {
+  if (state.bestFusionMethod === "F-GATE-NOQ") {
     return maskWeights(softmax([3.5 * (pVis - 0.5), 3.5 * (pAud - 0.5), 3.5 * (pRad - 0.5)]));
   }
   return maskWeights([number(row.w_vis, 0.33), number(row.w_aud, 0.33), number(row.w_rad, 0.33)]);
@@ -260,20 +260,24 @@ function renderStaticCharts() {
   );
 
   const stress = dataStore.stressAudio
-    .filter((r) => r.run_id === "F-GATE" || r.run_id === "F-GATE-NOQ")
+    .filter((r) => r.run_id === state.bestFusionMethod)
+    .sort((a, b) => number(a.snr_db) - number(b.snr_db));
+  const stressValues = stress.length ? stress : dataStore.stressAudio
+    .filter((r) => r.run_id === "F-GATE")
     .sort((a, b) => number(a.snr_db) - number(b.snr_db));
   drawLineChart(
     "stressChart",
     [
       {
-        label: "F-GATE/F-GATE-NOQ PR-AUC vs Audio SNR",
+        label: `${state.bestFusionMethod} PR-AUC vs Audio SNR`,
         color: COLORS.fuse,
-        values: stress.map((r) => number(r.pr_auc))
+        values: stressValues.map((r) => number(r.pr_auc))
       }
     ],
     0.5,
     1
   );
+  setText("stressTitle", `Robustness Snapshot (${state.bestFusionMethod})`);
 }
 
 function updateFusionSummary() {
@@ -283,8 +287,12 @@ function updateFusionSummary() {
   const bestUni = [...dataStore.metricsUnimodal]
     .filter((r) => (r.split || "test") === "test")
     .sort((a, b) => number(b.pr_auc) - number(a.pr_auc))[0];
-  const summary = `Best fusion on TEST: ${bestFusion.run_id} PR-AUC=${format3(bestFusion.pr_auc)} | Best unimodal: ${bestUni.run_id} PR-AUC=${format3(bestUni.pr_auc)}`;
+  const gain = number(bestFusion.pr_auc) - number(bestUni.pr_auc);
+  const summary = `Selected display model = ${state.bestFusionMethod}. This model is the top fusion variant on TEST by PR-AUC.`;
   setText("fusionSummary", summary);
+  setText("bestFusionStat", `${bestFusion.run_id} (${format3(bestFusion.pr_auc)})`);
+  setText("bestUnimodalStat", `${bestUni.run_id} (${format3(bestUni.pr_auc)})`);
+  setText("fusionGainStat", `+${format3(gain)}`);
 }
 
 function applyStep(stepIdx) {
@@ -336,11 +344,8 @@ function render() {
 
   setText("frameLabel", `Frame ${state.frame + 1} / ${rows.length}`);
   setText("judgeStepLabel", `Step ${state.judgeStep + 1}/${DEMO_STEPS.length}: ${DEMO_STEPS[state.judgeStep].label}`);
-  setText("fusionLabel", `Fusion (${state.fusionMethod})`);
+  setText("fusionLabel", `Fusion (${state.bestFusionMethod})`);
 
-  setText("scoreVis", format3(scores.pVis));
-  setText("scoreAud", format3(scores.pAud));
-  setText("scoreRad", format3(scores.pRad));
   setText("scoreFusion", format3(scores.pFuse));
 
   setText("qSNR", number(row.audio_snr_db, 30).toFixed(1));
@@ -367,10 +372,7 @@ function render() {
   drawLineChart(
     "confChart",
     [
-      { label: "vision", color: COLORS.vis, values: seriesRows.map((r) => r.p_vis) },
-      { label: "audio", color: COLORS.aud, values: seriesRows.map((r) => r.p_aud) },
-      { label: "radar", color: COLORS.rad, values: seriesRows.map((r) => r.p_rad) },
-      { label: "fusion", color: COLORS.fuse, values: seriesRows.map((r) => r.p_fuse) }
+      { label: `${state.bestFusionMethod}`, color: COLORS.fuse, values: seriesRows.map((r) => r.p_fuse) }
     ],
     0,
     1
@@ -386,11 +388,6 @@ function bindUI() {
     state.judgeStep = (state.judgeStep + 1) % DEMO_STEPS.length;
     applyStep(state.judgeStep);
     setText("demoStatus", "Manual step advance.");
-    render();
-  };
-
-  document.getElementById("fusionMethod").onchange = (e) => {
-    state.fusionMethod = String(e.target.value);
     render();
   };
 
@@ -418,21 +415,11 @@ function bindUI() {
   };
 }
 
-function initFusionSelector() {
-  const select = document.getElementById("fusionMethod");
-  const methods = [...new Set(dataStore.metricsFusion.map((r) => r.run_id))];
-  methods.forEach((m) => {
-    const opt = document.createElement("option");
-    opt.value = m;
-    opt.textContent = m;
-    select.appendChild(opt);
-  });
-
+function initBestFusionMethod() {
   const best = [...dataStore.metricsFusion]
     .filter((r) => (r.split || "test") === "test")
     .sort((a, b) => number(b.pr_auc) - number(a.pr_auc))[0];
-  state.fusionMethod = best ? best.run_id : "F-GATE";
-  select.value = state.fusionMethod;
+  state.bestFusionMethod = best ? best.run_id : "F-GATE";
 }
 
 async function main() {
@@ -450,7 +437,7 @@ async function main() {
 
   const scenarios = [...new Set(dataStore.predictions.map((r) => r.scenario || "clean"))];
   state.scenario = scenarios.includes("clean") ? "clean" : scenarios[0];
-  initFusionSelector();
+  initBestFusionMethod();
   bindUI();
   renderLatencyTable();
   renderStaticCharts();

@@ -125,6 +125,10 @@ button.active {
   gap: 0.6rem;
 }
 
+.score-grid.single {
+  grid-template-columns: 1fr;
+}
+
 .metric {
   border: 1px solid var(--line);
   border-radius: 8px;
@@ -141,6 +145,21 @@ button.active {
 .metric.fusion {
   grid-column: span 2;
   background: #ecfeff;
+}
+
+.score-grid.single .metric.fusion {
+  grid-column: span 1;
+}
+
+.metric.hero strong {
+  font-size: 1.5rem;
+}
+
+.stats-list {
+  margin-top: 0.6rem;
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.95rem;
 }
 
 .quality {
