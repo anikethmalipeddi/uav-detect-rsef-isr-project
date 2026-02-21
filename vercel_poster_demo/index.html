@@ -23,6 +23,9 @@
           <button id="btnNext">Next Step</button>
         </div>
         <div id="judgeStepLabel" class="muted"></div>
+        <div id="demoStatus" class="muted"></div>
+        <h3>Fusion Method</h3>
+        <select id="fusionMethod"></select>
         <h3>Scenario</h3>
         <div id="scenarioButtons" class="scenario-grid"></div>
         <h3>Frame</h3>
@@ -48,8 +51,10 @@
           <div class="metric"><span>Vision</span><strong id="scoreVis">0.000</strong></div>
           <div class="metric"><span>Audio</span><strong id="scoreAud">0.000</strong></div>
           <div class="metric"><span>Radar</span><strong id="scoreRad">0.000</strong></div>
-          <div class="metric fusion"><span>Fusion (GATE)</span><strong id="scoreFusion">0.000</strong></div>
+          <div class="metric fusion"><span id="fusionLabel">Fusion</span><strong id="scoreFusion">0.000</strong></div>
         </div>
+        <div id="fusionSummary" class="muted"></div>
+        <div class="muted">Note: these are per-frame scores. Model superiority is judged by dataset-level PR-AUC/ROC-AUC.</div>
         <div class="quality">
           <div>Audio SNR: <strong id="qSNR">-</strong> dB</div>
           <div>Vision condition: <strong id="qVision">-</strong></div>
@@ -99,4 +104,3 @@
     <script src="./app.js"></script>
   </body>
 </html>
-
