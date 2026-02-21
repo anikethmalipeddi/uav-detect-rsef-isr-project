@@ -4,10 +4,9 @@ type Props = {
   scenarios: Scenario[];
   selectedId: string;
   onSelect: (id: string) => void;
-  posterMode: boolean;
 };
 
-export default function ScenarioSelector({ scenarios, selectedId, onSelect, posterMode }: Props) {
+export default function ScenarioSelector({ scenarios, selectedId, onSelect }: Props) {
   return (
     <div className="flex flex-wrap items-center justify-center gap-2">
       {scenarios.map((scenario) => {
@@ -16,7 +15,7 @@ export default function ScenarioSelector({ scenarios, selectedId, onSelect, post
           <button
             key={scenario.id}
             onClick={() => onSelect(scenario.id)}
-            className={`rounded-full border px-3 py-1.5 font-semibold transition ${posterMode ? "text-base" : "text-sm"} ${
+            className={`rounded-full border px-3 py-1.5 text-sm font-semibold transition ${
               active
                 ? "border-cyan-700 bg-cyan-700 text-white"
                 : "border-slate-400 bg-white text-slate-800 hover:border-cyan-600 hover:text-cyan-700"

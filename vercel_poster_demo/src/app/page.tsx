@@ -86,9 +86,7 @@ export default function Page() {
 
   const [error, setError] = useState<string>("");
   const [scenarioId, setScenarioId] = useState<string>("");
-  const [posterMode, setPosterMode] = useState(false);
   const [showScript, setShowScript] = useState(false);
-  const [showComparison, setShowComparison] = useState(true);
   const [showDownloadables, setShowDownloadables] = useState(false);
   const [performanceStep, setPerformanceStep] = useState(DEFAULT_PERFORMANCE_STEP);
 
@@ -155,14 +153,14 @@ export default function Page() {
 
   const frameIdx = frame?.frame_idx ?? 0;
   const visionAvailable = scenario?.quality.vision !== "missing";
-  const showVisionPanel = !posterMode && visionAvailable;
+  const showVisionPanel = visionAvailable;
   const scenarioVideoFilter = getScenarioVideoFilter(scenario?.id ?? "clean");
   const fusionContextOnly = scenario?.quality.vision === "missing";
-  const showFusionBoxes = true;
+  const showFusionBoxes = !fusionContextOnly;
   const fusionTitleNote = showVisionPanel
-    ? "Fused predictive output (bbox + score) on the same frame for direct comparison."
-    : "Fused predictive output (bbox + score).";
-  const fusionContextNote = fusionContextOnly ? "Video shown for context only; vision modality is disabled." : undefined;
+    ? "Fused predictive output on the same frame for direct comparison."
+    : "Fused predictive output from available modalities.";
+  const fusionContextNote = fusionContextOnly ? "Vision dropped: predictive score uses audio+radar; bbox overlay is hidden." : undefined;
 
   useEffect(() => {
     if (!scenario) return;
@@ -209,12 +207,6 @@ export default function Page() {
     return () => window.clearInterval(timer);
   }, [isPlaying]);
 
-  useEffect(() => {
-    if (!posterMode) {
-      setShowComparison(true);
-    }
-  }, [posterMode]);
-
   const onPlayPause = async () => {
     const videos = [fusionVideoRef.current, visionVideoRef.current].filter(Boolean) as HTMLVideoElement[];
     if (!videos.length) return;
@@ -240,9 +232,7 @@ export default function Page() {
   const onReset = () => {
     if (!demo) return;
     setScenarioId(demo.meta.default_scenarios?.[0] ?? demo.scenarios[0].id);
-    setPosterMode(false);
     setShowScript(false);
-    setShowComparison(true);
     setShowDownloadables(false);
     setPerformanceStep(DEFAULT_PERFORMANCE_STEP);
     onScrub(0);
@@ -372,7 +362,7 @@ export default function Page() {
       <header className="mb-3 rounded-2xl border border-slate-300 bg-white p-3 shadow-sm md:p-4">
         <div className="grid gap-3 md:grid-cols-[1fr_2fr_1fr] md:items-center">
           <div>
-            <h1 className={`${posterMode ? "text-3xl" : "text-2xl"} font-black leading-tight text-slate-900`}>
+            <h1 className="text-2xl font-black leading-tight text-slate-900">
               UAV Multimodal Fusion Demo
             </h1>
           </div>
@@ -381,16 +371,9 @@ export default function Page() {
             scenarios={scenarios}
             selectedId={scenario.id}
             onSelect={(id) => setScenarioId(id)}
-            posterMode={posterMode}
           />
 
           <div className="flex flex-wrap items-center justify-end gap-2">
-            <button
-              onClick={() => setPosterMode((v) => !v)}
-              className={`rounded-lg border px-3 py-1.5 font-semibold ${posterMode ? "border-cyan-700 bg-cyan-700 text-white" : "border-slate-400 bg-white text-slate-900"}`}
-            >
-              Poster Mode {posterMode ? "On" : "Off"}
-            </button>
             <button onClick={onReset} className="rounded-lg border border-slate-400 bg-white px-3 py-1.5 font-semibold text-slate-900">
               Reset to default
             </button>
@@ -437,7 +420,7 @@ export default function Page() {
               />
             ) : null}
             <VideoOverlayPanel
-              label="Fusion (F-GATE-NOQ score)"
+              label="Predictive Output (F-GATE-NOQ)"
               titleNote={fusionTitleNote}
               videoRef={fusionVideoRef}
               videoSrc={scenario.media.video}
@@ -447,7 +430,7 @@ export default function Page() {
               sourceResolution={scenario.source_resolution}
               accent="#0f766e"
               performanceStep={performanceStep}
-              badgeText={fusionContextOnly ? "Fusion signal (audio+radar)" : "Fusion signal"}
+              badgeText={fusionContextOnly ? "Predictive output (audio+radar)" : "Predictive output"}
               showBoxes={showFusionBoxes}
               videoFilter={scenarioVideoFilter}
               contextNote={fusionContextNote}
@@ -508,7 +491,7 @@ export default function Page() {
 
         <section className="grid gap-3 xl:grid-cols-3">
           <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
-            <h3 className={`${posterMode ? "text-2xl" : "text-xl"} mb-2 font-black text-slate-900`}>Fusion Weights (Adaptive)</h3>
+            <h3 className="mb-2 text-xl font-black text-slate-900">Fusion Weights (Adaptive)</h3>
             <div className="space-y-2">
               {([
                 { key: "vision", label: "Vision", q: scenario.quality.vision },
@@ -534,48 +517,38 @@ export default function Page() {
 
           <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
             <div className="mb-2 flex items-center justify-between">
-              <h3 className={`${posterMode ? "text-2xl" : "text-xl"} font-black text-slate-900`}>Live Signal Snapshot</h3>
-              {posterMode ? (
-                <button
-                  onClick={() => setShowComparison((v) => !v)}
-                  className="rounded border border-slate-300 px-2 py-1 text-xs font-semibold"
-                >
-                  {showComparison ? "Collapse" : "Expand"}
-                </button>
-              ) : null}
+              <h3 className="text-xl font-black text-slate-900">Live Signal Snapshot</h3>
             </div>
             <div className="mb-2 rounded border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-semibold text-slate-700">
               Frame-level snapshot only. Use leaderboard/test tables for model ranking.
             </div>
 
-            {showComparison ? (
-              <div className="space-y-2 text-sm">
-                {[
-                  { name: "Vision", top: visionTop, prob: frame.modality_scores.vision, missing: scenario.quality.vision === "missing" },
-                  { name: "Audio", top: audioTop, prob: frame.modality_scores.audio, missing: scenario.quality.audio === "missing" },
-                  { name: "Radar", top: radarTop, prob: frame.modality_scores.radar, missing: scenario.quality.radar === "missing" },
-                  { name: "Fusion", top: fusionTop, prob: frame.modality_scores.fusion, missing: false },
-                ].map((row) => {
-                  const signal = signalLabel(row.prob, row.missing);
-                  return (
-                    <div key={row.name} className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5">
-                      <span className="font-semibold text-slate-800">{row.name}</span>
-                      {row.missing ? (
-                        <span className="text-slate-500">N/A</span>
-                      ) : (
-                        <span className="font-bold text-slate-900">
-                          {row.top.label} {signal}
-                        </span>
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            ) : null}
+            <div className="space-y-2 text-sm">
+              {[
+                { name: "Vision", top: visionTop, prob: frame.modality_scores.vision, missing: scenario.quality.vision === "missing" },
+                { name: "Audio", top: audioTop, prob: frame.modality_scores.audio, missing: scenario.quality.audio === "missing" },
+                { name: "Radar", top: radarTop, prob: frame.modality_scores.radar, missing: scenario.quality.radar === "missing" },
+                { name: "Predictive Output", top: fusionTop, prob: frame.modality_scores.fusion, missing: false },
+              ].map((row) => {
+                const signal = signalLabel(row.prob, row.missing);
+                return (
+                  <div key={row.name} className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5">
+                    <span className="font-semibold text-slate-800">{row.name}</span>
+                    {row.missing ? (
+                      <span className="text-slate-500">N/A</span>
+                    ) : (
+                      <span className="font-bold text-slate-900">
+                        {row.top.label} {signal}
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </section>
 
           <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
-            <h3 className={`${posterMode ? "text-2xl" : "text-xl"} mb-2 font-black text-slate-900`}>Why Fusion Helped</h3>
+            <h3 className="mb-2 text-xl font-black text-slate-900">Why Fusion Helped</h3>
             <div className="mb-2 rounded-lg border border-cyan-200 bg-cyan-50 px-3 py-2 font-semibold text-cyan-900">{deltaMessage}</div>
             <div className="mb-2 rounded border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800">{deltaSummary}</div>
             <div className="space-y-2">
@@ -596,7 +569,7 @@ export default function Page() {
 
         <section className="grid gap-3 xl:grid-cols-2">
           <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
-            <h3 className={`${posterMode ? "text-2xl" : "text-xl"} mb-2 font-black text-slate-900`}>Overall Leaderboard (Test)</h3>
+            <h3 className="mb-2 text-xl font-black text-slate-900">Overall Leaderboard (Test)</h3>
             <div className="mb-2 rounded border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-semibold text-slate-700">
               Includes unimodal and fusion methods, ranked by TEST PR-AUC.
             </div>
@@ -625,7 +598,7 @@ export default function Page() {
           </section>
 
           <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
-            <h3 className={`${posterMode ? "text-2xl" : "text-xl"} mb-2 font-black text-slate-900`}>Fusion Variants Comparison (Test only)</h3>
+            <h3 className="mb-2 text-xl font-black text-slate-900">Fusion Variants Comparison (Test only)</h3>
             <div className="mb-2 rounded border border-cyan-200 bg-cyan-50 px-2 py-1 text-xs font-semibold text-cyan-900">
               Compares fusion methods only: F-AVG, F-STATIC, F-GATE, F-GATE-NOQ.
             </div>
