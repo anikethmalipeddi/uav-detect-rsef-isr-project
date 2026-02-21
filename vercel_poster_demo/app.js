@@ -47,6 +47,28 @@ function setText(id, value) {
   if (el) el.textContent = value;
 }
 
+function updateFrameImage(row) {
+  const img = document.getElementById("frameImage");
+  if (!img) return;
+  const frameFiles = Array.isArray(dataStore?.manifest?.frame_files) ? dataStore.manifest.frame_files : [];
+  if (!frameFiles.length) {
+    img.src = "./assets/sample_frame.png";
+    setText("frameCaption", "Static sample frame (no frame sequence found).");
+    return;
+  }
+  const srcIdx = Math.max(0, Math.floor(number(row?.frame_idx, state.frame)));
+  const file = frameFiles[srcIdx % frameFiles.length];
+  img.src = `./assets/frames/${file}`;
+  img.onerror = () => {
+    img.onerror = null;
+    img.src = "./assets/sample_frame.png";
+  };
+  setText(
+    "frameCaption",
+    `Frame-synced visual: ${file} (source idx ${srcIdx}, scenario=${state.scenario})`
+  );
+}
+
 function getScenarioRows() {
   const rows = dataStore.predictions.filter((r) => (r.scenario || "clean") === state.scenario);
   return rows.length ? rows : dataStore.predictions;
@@ -324,6 +346,7 @@ function render() {
   setText("qSNR", number(row.audio_snr_db, 30).toFixed(1));
   setText("qVision", row.vision_condition || "normal");
   setText("qRadar", number(row.radar_clutter_level, 0).toFixed(2));
+  updateFrameImage(row);
 
   const seriesRows = rows.map((r) => {
     const s = currentScores(r);
@@ -444,4 +467,3 @@ main().catch((err) => {
   console.error(err);
   document.body.innerHTML = `<pre style="padding:1rem;color:#b91c1c">Failed to load demo data:\n${String(err)}</pre>`;
 });
-
