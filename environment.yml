@@ -1,0 +1,33 @@
+name: uavmm
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+dependencies:
+  - python=3.11
+  - pip
+  - ffmpeg
+  - git
+  - git-lfs
+  - pytorch
+  - torchvision
+  - torchaudio
+  - pip:
+      - ultralytics
+      - opencv-python
+      - numpy
+      - pandas
+      - scipy
+      - tqdm
+      - pyyaml
+      - soundfile
+      - librosa
+      - scikit-learn
+      - albumentations
+      - transformers
+      - datasets
+      - accelerate
+      - timm
+      - tensorboard
+      - matplotlib
+      - seaborn

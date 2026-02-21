@@ -1,0 +1,11 @@
+seed: 42
+input_dim: 24
+hidden1: 64
+hidden2: 32
+dropout: 0.2
+epochs: 100
+batch_size: 256
+lr: 0.001
+weight_decay: 0.0001
+modality_dropout_one: 0.30
+modality_dropout_two: 0.10

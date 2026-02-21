@@ -1,0 +1,10 @@
+task: detect
+model: yolov8n.pt
+data: data/processed/vision_yolo/dataset.yaml
+imgsz: 640
+epochs: 200
+batch: 16
+device: 0
+workers: 8
+project: runs/detect
+name: uavmm_yolov8n

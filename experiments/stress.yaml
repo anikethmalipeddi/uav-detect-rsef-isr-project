@@ -1,0 +1,11 @@
+vision:
+  gaussian_blur_kernels: [5, 9, 13]
+  brightness_scales: [0.4, 0.6]
+  gamma_values: [1.5, 2.0]
+  jpeg_quality: [10, 30, 50]
+audio:
+  snr_db: [30, 20, 10, 0, -10]
+  hard_clip: 0.95
+radar:
+  clutter_factors: [1, 2, 4]
+  snr_db: [30, 20, 10, 0, -10]

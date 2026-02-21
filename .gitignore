@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.so
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# Conda
+.conda/
+
+# Notebooks and logs
+*.ipynb_checkpoints
+*.log
+events.out.tfevents*
+
+# Data and model artifacts
+data/raw/
+data/processed/
+datasets/
+results/
+!results/.gitkeep
+final_isef_package/
+runs/
+wandb/
+logs/
+*.pt
+*.pth
+*.onnx
+*.ckpt
+*.h5
+*.npy
+*.npz
+*.mat
+*.7z
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.bin
+*.mp4
+*.avi
+*.mov
+*.mkv
+*.wav
+*.flac
+*.mp3
+*.ogg
+*.parquet
+*.feather
+*.csv.gz
+*.jsonl
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
