@@ -1,8 +1,0 @@
-{
-  "version": 2,
-  "routes": [
-    { "src": "^/$", "dest": "/vercel_poster_demo/index.html" },
-    { "src": "^/(.*)$", "dest": "/vercel_poster_demo/$1" }
-  ]
-}
-
