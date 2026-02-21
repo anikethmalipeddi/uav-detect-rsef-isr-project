@@ -23,8 +23,8 @@
                         "Start on Easy daylight and press Play for 3 seconds.",
                         "Switch to Noisy audio and show adaptive weighting.",
                         "Switch to Low-light / IR and note robustness under vision degradation.",
-                        "Open Tiny far target (WOW #1): vision missing, fusion still responds.",
-                        "Open Radar dropout (WOW #2): radar missing and gate shifts accordingly.",
+                        "Open Tiny far target: vision missing, fusion still responds.",
+                        "Open Radar dropout: radar missing and gate shifts accordingly.",
                         "Use scrubber to verify synchronized overlays.",
                         "Point to Final Test Score Comparison for authoritative ranking.",
                         "Reset to default and replay in under 2 minutes."
@@ -19969,9 +19969,9 @@
                       {
                           "id":  "missing_vision",
                           "title":  "Vision dropout",
-                          "demonstrates":  "WOW: vision unavailable, fusion uses audio+radar.",
+                          "demonstrates":  "Vision unavailable; fusion uses audio+radar.",
                           "wow":  true,
-                          "wow_tag":  "WOW #1",
+                          "wow_tag":  "",
                           "ground_truth":  {
                                                "label":  "DRONE present",
                                                "class":  "DRONE"
@@ -24953,9 +24953,9 @@
                       {
                           "id":  "missing_radar",
                           "title":  "Radar dropout",
-                          "demonstrates":  "WOW: radar unavailable, fusion uses vision+audio.",
+                          "demonstrates":  "Radar unavailable; fusion uses vision+audio.",
                           "wow":  true,
-                          "wow_tag":  "WOW #2",
+                          "wow_tag":  "",
                           "ground_truth":  {
                                                "label":  "DRONE present",
                                                "class":  "DRONE"

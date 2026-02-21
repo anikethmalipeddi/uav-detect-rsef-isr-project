@@ -24,7 +24,6 @@ export default function ScenarioSelector({ scenarios, selectedId, onSelect, post
             title={scenario.demonstrates}
           >
             {scenario.title}
-            {scenario.wow ? ` (${scenario.wow_tag})` : ""}
           </button>
         );
       })}

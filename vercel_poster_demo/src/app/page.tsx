@@ -158,12 +158,8 @@ export default function Page() {
   const showVisionPanel = !posterMode && visionAvailable;
   const scenarioVideoFilter = getScenarioVideoFilter(scenario?.id ?? "clean");
   const fusionContextOnly = scenario?.quality.vision === "missing";
-  const showFusionBoxes = !showVisionPanel && !fusionContextOnly;
-  const fusionContextNote = fusionContextOnly
-    ? "Video shown for context only; vision modality is disabled."
-    : showVisionPanel
-      ? "Spatial boxes are shown on Vision-only panel; this panel emphasizes fusion score."
-      : undefined;
+  const showFusionBoxes = !fusionContextOnly;
+  const fusionContextNote = fusionContextOnly ? "Video shown for context only; vision modality is disabled." : undefined;
 
   useEffect(() => {
     if (!scenario) return;
@@ -399,7 +395,6 @@ export default function Page() {
 
         <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
           <span className="rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-800">{scenario.demonstrates}</span>
-          {scenario.wow ? <span className="rounded-full bg-fuchsia-100 px-3 py-1 font-bold text-fuchsia-900">{scenario.wow_tag}</span> : null}
           <span className="rounded-full bg-cyan-50 px-3 py-1 font-semibold text-cyan-900">Best fusion on test: {bestFusionRunId}</span>
         </div>
         <div className="mt-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-xs font-semibold text-slate-700">
