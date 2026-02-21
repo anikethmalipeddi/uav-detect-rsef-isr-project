@@ -263,6 +263,14 @@ export default function Page() {
     if (!testFusionMetrics.length) return "F-GATE-NOQ";
     return [...testFusionMetrics].sort((a, b) => b.pr_auc - a.pr_auc)[0].run_id;
   }, [testFusionMetrics]);
+  const bestFusionMetric = useMemo(() => {
+    if (!testFusionMetrics.length) return null;
+    return [...testFusionMetrics].sort((a, b) => b.pr_auc - a.pr_auc)[0];
+  }, [testFusionMetrics]);
+  const visionUnimodalMetric = useMemo(() => {
+    const testUni = unimodalMetrics.filter((m) => m.split.toLowerCase() === "test");
+    return testUni.find((m) => m.run_id === "UNI-V") ?? null;
+  }, [unimodalMetrics]);
 
   const ablationFigure = useMemo(() => {
     const row = downloadables.find((d) => d.name === "ablation_bars.png");
@@ -342,6 +350,12 @@ export default function Page() {
           {scenario.wow ? <span className="rounded-full bg-fuchsia-100 px-3 py-1 font-bold text-fuchsia-900">{scenario.wow_tag}</span> : null}
           <span className="rounded-full bg-cyan-50 px-3 py-1 font-semibold text-cyan-900">Best fusion on test: {bestFusionRunId}</span>
         </div>
+        {bestFusionMetric ? (
+          <div className="mt-2 rounded-lg border border-emerald-300 bg-emerald-50 px-3 py-2 text-sm font-bold text-emerald-900">
+            TEST PR-AUC: {bestFusionMetric.run_id} = {bestFusionMetric.pr_auc.toFixed(3)}
+            {visionUnimodalMetric ? ` vs UNI-V = ${visionUnimodalMetric.pr_auc.toFixed(3)}` : ""}
+          </div>
+        ) : null}
       </header>
 
       <section className="grid gap-3 lg:grid-cols-[2.2fr_1fr]">
@@ -520,7 +534,6 @@ export default function Page() {
                   { name: "Radar", top: radarTop, prob: frame.modality_scores.radar, missing: scenario.quality.radar === "missing" },
                   { name: "Fusion", top: fusionTop, prob: frame.modality_scores.fusion, missing: false },
                 ].map((row) => {
-                  const correct = !row.missing && row.top.label === gt;
                   const signal = signalLabel(row.prob, row.missing);
                   return (
                     <div key={row.name} className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5">
@@ -529,7 +542,7 @@ export default function Page() {
                         <span className="text-slate-500">N/A</span>
                       ) : (
                         <span className="font-bold text-slate-900">
-                          {row.top.label} {signal} {correct ? "OK" : "X"}
+                          {row.top.label} {signal}
                         </span>
                       )}
                     </div>
