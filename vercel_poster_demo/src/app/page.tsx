@@ -11,6 +11,13 @@ import { AudioSample, DemoData, Downloadable, FrameRow, RadarRow, Scenario } fro
 
 const DEFAULT_PERFORMANCE_STEP = 1;
 
+type FusionMetricRow = {
+  run_id: string;
+  split: string;
+  pr_auc: number;
+  roc_auc: number;
+};
+
 function validateDemoData(payload: unknown): payload is DemoData {
   if (!payload || typeof payload !== "object") return false;
   const obj = payload as Record<string, unknown>;
@@ -49,6 +56,7 @@ export default function Page() {
   const [audio, setAudio] = useState<AudioSample[]>([]);
   const [radar, setRadar] = useState<RadarRow[]>([]);
   const [downloadables, setDownloadables] = useState<Downloadable[]>([]);
+  const [fusionMetrics, setFusionMetrics] = useState<FusionMetricRow[]>([]);
 
   const [error, setError] = useState<string>("");
   const [scenarioId, setScenarioId] = useState<string>("");
@@ -68,11 +76,12 @@ export default function Page() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [scenarioRes, audioRes, radarRes, downloadsRes] = await Promise.all([
+        const [scenarioRes, audioRes, radarRes, downloadsRes, fusionMetricsRes] = await Promise.all([
           fetch("/demo/scenarios.json", { cache: "no-store" }),
           fetch("/demo/data/audio_features.json", { cache: "force-cache" }),
           fetch("/demo/data/radar_features.json", { cache: "force-cache" }),
           fetch("/demo/downloadables/manifest.json", { cache: "no-store" }),
+          fetch("/demo/data/metrics_fusion.json", { cache: "force-cache" }),
         ]);
 
         if (!scenarioRes.ok) throw new Error(`Failed to load scenarios.json (${scenarioRes.status}).`);
@@ -85,11 +94,13 @@ export default function Page() {
         const parsedAudio = audioRes.ok ? ((await audioRes.json()) as AudioSample[]) : [];
         const parsedRadar = radarRes.ok ? ((await radarRes.json()) as RadarRow[]) : [];
         const parsedDownloads = downloadsRes.ok ? ((await downloadsRes.json()) as Downloadable[]) : [];
+        const parsedFusionMetrics = fusionMetricsRes.ok ? ((await fusionMetricsRes.json()) as FusionMetricRow[]) : [];
 
         setDemo(parsedDemo);
         setAudio(Array.isArray(parsedAudio) ? parsedAudio : []);
         setRadar(Array.isArray(parsedRadar) ? parsedRadar : []);
         setDownloadables(Array.isArray(parsedDownloads) ? parsedDownloads : []);
+        setFusionMetrics(Array.isArray(parsedFusionMetrics) ? parsedFusionMetrics : []);
 
         const defaultScenario = parsedDemo.meta.default_scenarios?.[0] || parsedDemo.scenarios[0]?.id || "";
         setScenarioId(defaultScenario);
@@ -114,6 +125,8 @@ export default function Page() {
   }, [scenario, currentTime]);
 
   const frameIdx = frame?.frame_idx ?? 0;
+  const visionAvailable = scenario?.quality.vision !== "missing";
+  const showVisionPanel = !posterMode && visionAvailable;
 
   useEffect(() => {
     if (!scenario) return;
@@ -215,6 +228,9 @@ export default function Page() {
   const delta = frame ? frame.modality_scores.fusion - frame.modality_scores.vision : 0;
 
   const deltaMessage = (() => {
+    if (scenario?.quality.vision === "missing") return "Vision is missing in this scenario. Fusion reweights to audio/radar.";
+    if (scenario?.quality.audio === "missing") return "Audio is missing in this scenario. Fusion reweights to vision/radar.";
+    if (scenario?.quality.radar === "missing") return "Radar is missing in this scenario. Fusion reweights to vision/audio.";
     if (visionTop.label !== gt && fusionTop.label === gt) return "Fusion correct while Vision-only is wrong.";
     if (visionTop.label === gt && fusionTop.label === gt && delta >= 0) {
       return `Both correct; fusion margin +${fmtPct(Math.max(0, delta))}.`;
@@ -228,6 +244,20 @@ export default function Page() {
     const row = radar.find((r) => Number(r.frame_idx) === frame.frame_idx);
     return row ?? radar[0] ?? null;
   }, [radar, frame]);
+
+  const testFusionMetrics = useMemo(
+    () => fusionMetrics.filter((m) => m.split.toLowerCase() === "test"),
+    [fusionMetrics],
+  );
+  const bestFusionRunId = useMemo(() => {
+    if (!testFusionMetrics.length) return "F-GATE-NOQ";
+    return [...testFusionMetrics].sort((a, b) => b.pr_auc - a.pr_auc)[0].run_id;
+  }, [testFusionMetrics]);
+
+  const ablationFigure = useMemo(() => {
+    const row = downloadables.find((d) => d.name === "ablation_bars.png");
+    return row?.path || null;
+  }, [downloadables]);
 
   if (error) {
     return (
@@ -288,24 +318,26 @@ export default function Page() {
         <div className="mt-3 flex flex-wrap items-center gap-2 text-sm">
           <span className="rounded-full bg-slate-100 px-3 py-1 font-semibold text-slate-800">{scenario.demonstrates}</span>
           {scenario.wow ? <span className="rounded-full bg-fuchsia-100 px-3 py-1 font-bold text-fuchsia-900">{scenario.wow_tag}</span> : null}
+          <span className="rounded-full bg-cyan-50 px-3 py-1 font-semibold text-cyan-900">Best fusion on test: {bestFusionRunId}</span>
         </div>
       </header>
 
       <section className="grid gap-3 lg:grid-cols-[2.2fr_1fr]">
         <div className="space-y-3">
-          <div className={`grid gap-3 ${posterMode ? "grid-cols-1" : "grid-cols-1 xl:grid-cols-2"}`}>
-            <VideoOverlayPanel
-              label="Vision-only"
-              videoRef={visionVideoRef}
-              videoSrc={scenario.media.video}
-              frame={frame}
-              boxesFrom="vision"
-              coordinateType={scenario.coordinate_type}
-              sourceResolution={scenario.source_resolution}
-              accent="#2563eb"
-              performanceStep={performanceStep}
-              hidden={posterMode}
-            />
+          <div className={`grid gap-3 ${showVisionPanel ? "grid-cols-1 xl:grid-cols-2" : "grid-cols-1"}`}>
+            {showVisionPanel ? (
+              <VideoOverlayPanel
+                label="Vision-only"
+                videoRef={visionVideoRef}
+                videoSrc={scenario.media.video}
+                frame={frame}
+                boxesFrom="vision"
+                coordinateType={scenario.coordinate_type}
+                sourceResolution={scenario.source_resolution}
+                accent="#2563eb"
+                performanceStep={performanceStep}
+              />
+            ) : null}
             <VideoOverlayPanel
               label="Fusion (F-GATE-NOQ score)"
               videoRef={fusionVideoRef}
@@ -318,6 +350,12 @@ export default function Page() {
               performanceStep={performanceStep}
             />
           </div>
+
+          {!visionAvailable ? (
+            <div className="rounded-2xl border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-semibold text-amber-900">
+              Vision modality is missing in this scenario. Vision-only output is intentionally hidden.
+            </div>
+          ) : null}
 
           <div className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
             <div className="grid gap-2 md:grid-cols-[auto_1fr_auto_auto] md:items-center">
@@ -366,6 +404,28 @@ export default function Page() {
         </div>
 
         <aside className="space-y-3">
+          <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
+            <h3 className={`${posterMode ? "text-2xl" : "text-xl"} mb-2 font-black text-slate-900`}>Final Test Score Comparison</h3>
+            {ablationFigure ? (
+              <img src={ablationFigure} alt="Fusion model score comparison" className="mb-2 w-full rounded-lg border border-slate-200" />
+            ) : null}
+            {testFusionMetrics.length ? (
+              <div className="space-y-1 text-sm">
+                {testFusionMetrics.map((m) => {
+                  const isBest = m.run_id === bestFusionRunId;
+                  return (
+                    <div key={m.run_id} className={`flex items-center justify-between rounded px-2 py-1 ${isBest ? "bg-cyan-50 font-bold text-cyan-900" : "bg-slate-50 text-slate-800"}`}>
+                      <span>{m.run_id}</span>
+                      <span>PR-AUC {m.pr_auc.toFixed(3)} | ROC-AUC {m.roc_auc.toFixed(3)}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-sm text-slate-500">Fusion metric table not available.</div>
+            )}
+          </section>
+
           <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
             <h3 className={`${posterMode ? "text-2xl" : "text-xl"} mb-2 font-black text-slate-900`}>Fusion Weights (Adaptive)</h3>
             <div className="space-y-2">
@@ -417,10 +477,10 @@ export default function Page() {
                     <div key={row.name} className="flex items-center justify-between rounded-lg border border-slate-200 bg-slate-50 px-2 py-1.5">
                       <span className="font-semibold text-slate-800">{row.name}</span>
                       {row.missing ? (
-                        <span className="text-slate-500">—</span>
+                        <span className="text-slate-500">N/A</span>
                       ) : (
                         <span className="font-bold text-slate-900">
-                          {row.top.label} {fmtPct(row.prob)} {correct ? "✅" : "❌"}
+                          {row.top.label} {fmtPct(row.prob)} {correct ? "OK" : "X"}
                         </span>
                       )}
                     </div>
@@ -455,7 +515,7 @@ export default function Page() {
           className="w-full text-left text-lg font-black text-slate-900"
           onClick={() => setShowDownloadables((v) => !v)}
         >
-          Downloadables {showDownloadables ? "▾" : "▸"}
+          Downloadables {showDownloadables ? "(hide)" : "(show)"}
         </button>
         {showDownloadables ? (
           <div className="mt-2 flex flex-wrap gap-2 text-sm">
