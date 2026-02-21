@@ -390,62 +390,6 @@ export default function Page() {
       </header>
 
       <section className="space-y-3">
-        <section className="grid gap-3 xl:grid-cols-2">
-          <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
-            <h3 className={`${posterMode ? "text-2xl" : "text-xl"} mb-2 font-black text-slate-900`}>Overall Leaderboard (Test)</h3>
-            <div className="mb-2 rounded border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-semibold text-slate-700">
-              Includes unimodal and fusion methods, ranked by TEST PR-AUC.
-            </div>
-            <div className="space-y-2 text-sm">
-              {leaderboardRows.map((m, idx) => {
-                const isBest = idx === 0;
-                return (
-                  <div
-                    key={`${m.run_id}-${m.split}`}
-                    className={`rounded px-2 py-1 ${isBest ? "bg-emerald-50 font-bold text-emerald-900" : "bg-slate-50 text-slate-800"}`}
-                  >
-                    <div className="mb-1 flex items-center justify-between">
-                      <span>{m.run_id}</span>
-                      <span>PR-AUC {m.pr_auc.toFixed(3)}</span>
-                    </div>
-                    <div className="h-2 rounded bg-slate-200">
-                      <div
-                        className={`h-2 rounded ${isBest ? "bg-emerald-700" : "bg-slate-500"}`}
-                        style={{ width: `${Math.max(0, Math.min(1, m.pr_auc / leaderboardMaxPrAuc)) * 100}%` }}
-                      />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-
-          <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
-            <h3 className={`${posterMode ? "text-2xl" : "text-xl"} mb-2 font-black text-slate-900`}>Fusion Variants Comparison (Test only)</h3>
-            <div className="mb-2 rounded border border-cyan-200 bg-cyan-50 px-2 py-1 text-xs font-semibold text-cyan-900">
-              Compares fusion methods only: F-AVG, F-STATIC, F-GATE, F-GATE-NOQ.
-            </div>
-            {ablationFigure ? (
-              <img src={ablationFigure} alt="Fusion variants comparison" className="mb-2 w-full rounded-lg border border-slate-200" />
-            ) : null}
-            {testFusionMetrics.length ? (
-              <div className="space-y-1 text-sm">
-                {testFusionMetrics.map((m) => {
-                  const isBest = m.run_id === bestFusionRunId;
-                  return (
-                    <div key={m.run_id} className={`flex items-center justify-between rounded px-2 py-1 ${isBest ? "bg-cyan-50 font-bold text-cyan-900" : "bg-slate-50 text-slate-800"}`}>
-                      <span>{m.run_id}</span>
-                      <span>PR-AUC {m.pr_auc.toFixed(3)} | ROC-AUC {m.roc_auc.toFixed(3)}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="text-sm text-slate-500">Fusion metric table not available.</div>
-            )}
-          </section>
-        </section>
-
         <section className="space-y-3">
           <div className={`grid gap-3 ${showVisionPanel ? "grid-cols-1 xl:grid-cols-2" : "grid-cols-1"}`}>
             {showVisionPanel ? (
@@ -616,6 +560,62 @@ export default function Page() {
                 </div>
               ))}
             </div>
+          </section>
+        </section>
+
+        <section className="grid gap-3 xl:grid-cols-2">
+          <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
+            <h3 className={`${posterMode ? "text-2xl" : "text-xl"} mb-2 font-black text-slate-900`}>Overall Leaderboard (Test)</h3>
+            <div className="mb-2 rounded border border-slate-200 bg-slate-50 px-2 py-1 text-xs font-semibold text-slate-700">
+              Includes unimodal and fusion methods, ranked by TEST PR-AUC.
+            </div>
+            <div className="space-y-2 text-sm">
+              {leaderboardRows.map((m, idx) => {
+                const isBest = idx === 0;
+                return (
+                  <div
+                    key={`${m.run_id}-${m.split}`}
+                    className={`rounded px-2 py-1 ${isBest ? "bg-emerald-50 font-bold text-emerald-900" : "bg-slate-50 text-slate-800"}`}
+                  >
+                    <div className="mb-1 flex items-center justify-between">
+                      <span>{m.run_id}</span>
+                      <span>PR-AUC {m.pr_auc.toFixed(3)}</span>
+                    </div>
+                    <div className="h-2 rounded bg-slate-200">
+                      <div
+                        className={`h-2 rounded ${isBest ? "bg-emerald-700" : "bg-slate-500"}`}
+                        style={{ width: `${Math.max(0, Math.min(1, m.pr_auc / leaderboardMaxPrAuc)) * 100}%` }}
+                      />
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </section>
+
+          <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
+            <h3 className={`${posterMode ? "text-2xl" : "text-xl"} mb-2 font-black text-slate-900`}>Fusion Variants Comparison (Test only)</h3>
+            <div className="mb-2 rounded border border-cyan-200 bg-cyan-50 px-2 py-1 text-xs font-semibold text-cyan-900">
+              Compares fusion methods only: F-AVG, F-STATIC, F-GATE, F-GATE-NOQ.
+            </div>
+            {ablationFigure ? (
+              <img src={ablationFigure} alt="Fusion variants comparison" className="mb-2 w-full rounded-lg border border-slate-200" />
+            ) : null}
+            {testFusionMetrics.length ? (
+              <div className="space-y-1 text-sm">
+                {testFusionMetrics.map((m) => {
+                  const isBest = m.run_id === bestFusionRunId;
+                  return (
+                    <div key={m.run_id} className={`flex items-center justify-between rounded px-2 py-1 ${isBest ? "bg-cyan-50 font-bold text-cyan-900" : "bg-slate-50 text-slate-800"}`}>
+                      <span>{m.run_id}</span>
+                      <span>PR-AUC {m.pr_auc.toFixed(3)} | ROC-AUC {m.roc_auc.toFixed(3)}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              <div className="text-sm text-slate-500">Fusion metric table not available.</div>
+            )}
           </section>
         </section>
       </section>
