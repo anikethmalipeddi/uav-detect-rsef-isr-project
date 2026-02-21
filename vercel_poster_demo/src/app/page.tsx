@@ -158,6 +158,12 @@ export default function Page() {
   const showVisionPanel = !posterMode && visionAvailable;
   const scenarioVideoFilter = getScenarioVideoFilter(scenario?.id ?? "clean");
   const fusionContextOnly = scenario?.quality.vision === "missing";
+  const showFusionBoxes = !showVisionPanel && !fusionContextOnly;
+  const fusionContextNote = fusionContextOnly
+    ? "Video shown for context only; vision modality is disabled."
+    : showVisionPanel
+      ? "Spatial boxes are shown on Vision-only panel; this panel emphasizes fusion score."
+      : undefined;
 
   useEffect(() => {
     if (!scenario) return;
@@ -256,19 +262,37 @@ export default function Page() {
   const fusionDist = frame ? toClassDistribution(frame.modality_scores.fusion) : toClassDistribution(0.5);
   const fusionDistEntries = classEntries(fusionDist);
 
-  const delta = frame ? frame.modality_scores.fusion - frame.modality_scores.vision : 0;
+  const unimodalSnapshot = frame
+    ? [
+        { name: "Vision", score: frame.modality_scores.vision, top: visionTop, missing: scenario?.quality.vision === "missing" },
+        { name: "Audio", score: frame.modality_scores.audio, top: audioTop, missing: scenario?.quality.audio === "missing" },
+        { name: "Radar", score: frame.modality_scores.radar, top: radarTop, missing: scenario?.quality.radar === "missing" },
+      ]
+    : [];
+  const bestUnimodal = unimodalSnapshot.length
+    ? [...unimodalSnapshot.filter((m) => !m.missing)].sort((a, b) => b.score - a.score)[0] ?? null
+    : null;
+  const delta = frame && bestUnimodal ? frame.modality_scores.fusion - bestUnimodal.score : 0;
 
   const deltaMessage = (() => {
-    if (scenario?.quality.vision === "missing") return "Vision is missing in this scenario. Fusion reweights to audio/radar.";
-    if (scenario?.quality.audio === "missing") return "Audio is missing in this scenario. Fusion reweights to vision/radar.";
-    if (scenario?.quality.radar === "missing") return "Radar is missing in this scenario. Fusion reweights to vision/audio.";
-    if (visionTop.label !== gt && fusionTop.label === gt) return "Fusion correct while Vision-only is wrong.";
-    if (visionTop.label === gt && fusionTop.label === gt && delta >= 0) {
-      return `Both correct; fusion margin +${fmtPct(Math.max(0, delta))}.`;
+    if (!bestUnimodal) return "No unimodal comparator available for this scenario frame.";
+    if (bestUnimodal.top.label !== gt && fusionTop.label === gt) {
+      return `Fusion correct while best unimodal (${bestUnimodal.name}) is wrong.`;
     }
-    if (fusionTop.label === gt) return "Fusion remains correct under stress.";
+    if (bestUnimodal.top.label === gt && fusionTop.label === gt && delta >= 0) {
+      return `Both correct; fusion vs best unimodal (${bestUnimodal.name}) +${fmtPct(delta)}.`;
+    }
+    if (fusionTop.label === gt && delta < 0) {
+      return `Fusion correct; best unimodal (${bestUnimodal.name}) has higher frame confidence by ${fmtPct(-delta)}.`;
+    }
+    if (bestUnimodal.top.label === gt && fusionTop.label !== gt) {
+      return `Best unimodal (${bestUnimodal.name}) is correct on this frame.`;
+    }
     return "Hard case across models.";
   })();
+  const deltaSummary = bestUnimodal && frame
+    ? `Fusion ${fmtPct(frame.modality_scores.fusion)} vs best unimodal (${bestUnimodal.name}) ${fmtPct(bestUnimodal.score)} (${delta >= 0 ? "+" : ""}${(delta * 100).toFixed(1)}%).`
+    : "No unimodal comparator available.";
 
   const scenarioAudio = useMemo(
     () => (scenario ? audioByScenario[scenario.id] ?? [] : []),
@@ -418,9 +442,9 @@ export default function Page() {
               accent="#0f766e"
               performanceStep={performanceStep}
               badgeText={fusionContextOnly ? "Fusion signal (audio+radar)" : "Fusion signal"}
-              showBoxes={!fusionContextOnly}
+              showBoxes={showFusionBoxes}
               videoFilter={scenarioVideoFilter}
-              contextNote={fusionContextOnly ? "Video shown for context only; vision modality is disabled." : undefined}
+              contextNote={fusionContextNote}
             />
           </div>
 
@@ -547,6 +571,7 @@ export default function Page() {
           <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
             <h3 className={`${posterMode ? "text-2xl" : "text-xl"} mb-2 font-black text-slate-900`}>Why Fusion Helped</h3>
             <div className="mb-2 rounded-lg border border-cyan-200 bg-cyan-50 px-3 py-2 font-semibold text-cyan-900">{deltaMessage}</div>
+            <div className="mb-2 rounded border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800">{deltaSummary}</div>
             <div className="space-y-2">
               {fusionDistEntries.map(([label, value]) => (
                 <div key={label} className="space-y-1">
