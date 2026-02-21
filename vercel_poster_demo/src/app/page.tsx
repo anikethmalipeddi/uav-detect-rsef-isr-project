@@ -274,17 +274,18 @@ export default function Page() {
     : null;
   const avgUnimodalTop = avgUnimodalScore !== null ? topClassFromDroneProb(avgUnimodalScore) : null;
   const avgUnimodalLabel = availableUnimodals.length
-    ? `avg unimodal (${availableUnimodals.map((m) => m.name).join("+")})`
-    : "avg unimodal";
+    ? `Avg Unimodal (${availableUnimodals.map((m) => m.name).join("+")})`
+    : "Avg Unimodal";
   const delta = frame && avgUnimodalScore !== null ? frame.modality_scores.fusion - avgUnimodalScore : 0;
+  const deltaSignedPct = `${delta >= 0 ? "+" : ""}${(delta * 100).toFixed(1)}%`;
 
-  const deltaMessage = (() => {
+  const outcomeMessage = (() => {
     if (avgUnimodalScore === null || !avgUnimodalTop) return "No unimodal comparator available for this scenario frame.";
     if (avgUnimodalTop.label !== gt && fusionTop.label === gt) {
       return `Fusion correct while ${avgUnimodalLabel} is wrong.`;
     }
     if (avgUnimodalTop.label === gt && fusionTop.label === gt && delta >= 0) {
-      return `Both correct; fusion vs ${avgUnimodalLabel} +${fmtPct(delta)}.`;
+      return "Both correct on this frame.";
     }
     if (fusionTop.label === gt && delta < 0) {
       return `Fusion correct; ${avgUnimodalLabel} has higher frame confidence by ${fmtPct(-delta)}.`;
@@ -294,8 +295,11 @@ export default function Page() {
     }
     return "Hard case across models.";
   })();
+  const deltaMessage = avgUnimodalScore !== null && frame
+    ? `Fusion ${deltaSignedPct} vs ${avgUnimodalLabel} prediction confidence.`
+    : "No unimodal comparator available.";
   const deltaSummary = avgUnimodalScore !== null && frame
-    ? `Fusion ${fmtPct(frame.modality_scores.fusion)} vs ${avgUnimodalLabel} ${fmtPct(avgUnimodalScore)} (${delta >= 0 ? "+" : ""}${(delta * 100).toFixed(1)}%).`
+    ? `${outcomeMessage} (Fusion ${fmtPct(frame.modality_scores.fusion)} | ${avgUnimodalLabel} ${fmtPct(avgUnimodalScore)})`
     : "No unimodal comparator available.";
 
   const scenarioAudio = useMemo(
