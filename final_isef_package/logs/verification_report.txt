@@ -1,0 +1,49 @@
+ISEF PACKAGE VERIFICATION
+Package path: C:\Users\Aniketh\uav-detect\final_isef_package
+
+[PASS] required file: README.md: ok (1334 bytes)
+[PASS] required file: poster_kit/README.md: ok (415 bytes)
+[PASS] required file: poster_kit/artifact_index.csv: ok (468 bytes)
+[PASS] required file: provenance/run_metadata.json: ok (7031 bytes)
+[PASS] required file: provenance/environment.yml: ok (6536 bytes)
+[PASS] required file: provenance/data_manifest.csv: ok (1438 bytes)
+[PASS] required file: demo/README.md: ok (722 bytes)
+[PASS] required file: demo/assets/manifest.json: ok (889 bytes)
+[PASS] required file: demo/output/demo_screenshot.png: ok (147174 bytes)
+[PASS] required file: demo/app.py: ok (3946 bytes)
+[PASS] required file: demo/run_demo.py: ok (1740 bytes)
+[PASS] required file: logs/final_run.log: ok (4028 bytes)
+[PASS] demo env/requirements: ok (74 bytes)
+[PASS] dataset classes: 4-class labels confirmed: ['AIRPLANE', 'BIRD', 'DRONE', 'HELICOPTER']
+[PASS] metrics_unimodal schema: rows=3, cols=8
+[PASS] metrics_fusion schema: rows=4, cols=8
+[PASS] latency_summary schema: keys ok: ['methods']
+[PASS] metrics_vision schema: keys ok: ['map50_95', 'map50']
+[PASS] ablation_table schema: rows=4, cols=8
+[PASS] missing_modality schema: rows=28, cols=9
+[PASS] stress_audio_snr schema: rows=20, cols=9
+[PASS] stress_vision_corruptions schema: rows=36, cols=11
+[PASS] stress_radar_clutter schema: rows=20, cols=10
+[PASS] data_manifest schema: rows=7, cols=7
+[PASS] provenance run_metadata schema: keys ok: ['current_git', 'system', 'torch', 'environment_export']
+[PASS] figures png-only: all figure files are PNG
+[PASS] figure: pr_curve_fusion_vs_baselines.png: image readable: pr_curve_fusion_vs_baselines.png
+[PASS] figure: roc_curve_fusion_vs_baselines.png: image readable: roc_curve_fusion_vs_baselines.png
+[PASS] figure: confusion_matrix_final_raw.png: image readable: confusion_matrix_final_raw.png
+[PASS] figure: confusion_matrix_final_norm.png: image readable: confusion_matrix_final_norm.png
+[PASS] figure: ablation_bars.png: image readable: ablation_bars.png
+[PASS] figure: missing_modality_bars.png: image readable: missing_modality_bars.png
+[PASS] figure: stress_audio_snr_curve.png: image readable: stress_audio_snr_curve.png
+[PASS] figure: stress_vision_corruption_curve.png: image readable: stress_vision_corruption_curve.png
+[PASS] figure: stress_radar_clutter_curve.png: image readable: stress_radar_clutter_curve.png
+[PASS] figure: gating_weights_timeseries.png: image readable: gating_weights_timeseries.png
+[PASS] figure: quality_vs_weight_audio.png: image readable: quality_vs_weight_audio.png
+[PASS] figure: quality_vs_weight_vision.png: image readable: quality_vs_weight_vision.png
+[PASS] figure: quality_vs_weight_radar.png: image readable: quality_vs_weight_radar.png
+[PASS] figure: latency_breakdown.png: image readable: latency_breakdown.png
+[PASS] figure: qualitative_overlays_grid.png: image readable: qualitative_overlays_grid.png
+[PASS] confusion_matrix_final_raw exists and readable: image readable: confusion_matrix_final_raw.png
+[PASS] confusion_matrix_final_norm exists and readable: image readable: confusion_matrix_final_norm.png
+
+SUMMARY: PASS=43 FAIL=0
+FINAL RESULT: PASS

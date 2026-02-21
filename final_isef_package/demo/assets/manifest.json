@@ -1,0 +1,30 @@
+{
+  "default_predicted_class": "DRONE",
+  "assets": [
+    {
+      "name": "manifest.json",
+      "sha256": "790098e78d92174280583879769d3d124232204a83aedf93aeca1b6472c8c707",
+      "size_bytes": 732
+    },
+    {
+      "name": "sample_audio_features.csv",
+      "sha256": "4bc24b01482b967bd43f94ff77e6e137f7f58556db28e5da8ca0c42b874b5921",
+      "size_bytes": 2614
+    },
+    {
+      "name": "sample_frame.png",
+      "sha256": "3dade7cd9e5d946dfd944a17f73e72b9135bed63182c79ee891f0c0c2df5f0a4",
+      "size_bytes": 46261
+    },
+    {
+      "name": "sample_predictions.csv",
+      "sha256": "0f248da5bd2c23e5796be64c6286fa91d1773da4339336dc1a7935b78701ab83",
+      "size_bytes": 8684
+    },
+    {
+      "name": "sample_radar_features.csv",
+      "sha256": "6443a4b366a5be416a3396991e0098c7407d39ee024243c1b8ec32fbe9025940",
+      "size_bytes": 37375
+    }
+  ]
+}

@@ -19,6 +19,8 @@ env/
 *.ipynb_checkpoints
 *.log
 events.out.tfevents*
+!final_isef_package/logs/
+!final_isef_package/logs/**
 
 # Data and model artifacts
 data/raw/
@@ -26,22 +28,13 @@ data/processed/
 datasets/
 results/
 !results/.gitkeep
-# Poster kit is committed; keep it curated and lightweight.
-final_isef_package/*
-!final_isef_package/README_CHECKLIST.txt
-!final_isef_package/tables/
-!final_isef_package/tables/**
-!final_isef_package/figures/
-!final_isef_package/figures/**
-!final_isef_package/verification/
-!final_isef_package/verification/**
-!final_isef_package/metadata/
-!final_isef_package/metadata/**
 final_isef_package/demo_exports/
 runs/
 models/
 wandb/
 logs/
+!final_isef_package/logs/
+!final_isef_package/logs/**
 *.pt
 *.pth
 *.onnx

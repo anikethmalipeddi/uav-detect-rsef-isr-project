@@ -1,0 +1,22 @@
+{
+  "generated_utc": "2026-02-21T17:13:59.745505+00:00",
+  "figure_dir": "final_isef_package/figures",
+  "figures": [
+    "pr_curve_fusion_vs_baselines.png",
+    "roc_curve_fusion_vs_baselines.png",
+    "confusion_matrix_final_raw.png",
+    "confusion_matrix_final_norm.png",
+    "ablation_bars.png",
+    "missing_modality_bars.png",
+    "stress_audio_snr_curve.png",
+    "stress_vision_corruption_curve.png",
+    "stress_radar_clutter_curve.png",
+    "gating_weights_timeseries.png",
+    "quality_vs_weight_audio.png",
+    "quality_vs_weight_vision.png",
+    "quality_vs_weight_radar.png",
+    "latency_breakdown.png",
+    "qualitative_overlays_grid.png"
+  ],
+  "placeholders": []
+}

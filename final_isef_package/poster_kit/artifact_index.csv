@@ -1,0 +1,10 @@
+section,artifact_path
+Core performance,figures/pr_curve_fusion_vs_baselines.png
+Core performance,figures/confusion_matrix_final_norm.png
+Robustness,figures/missing_modality_bars.png
+Robustness,figures/stress_audio_snr_curve.png
+Interpretability,figures/gating_weights_timeseries.png
+Engineering,figures/latency_breakdown.png
+Qualitative,figures/qualitative_overlays_grid.png
+Metrics table,metrics/metrics_fusion.csv
+Ablations table,tables/ablation_table.csv

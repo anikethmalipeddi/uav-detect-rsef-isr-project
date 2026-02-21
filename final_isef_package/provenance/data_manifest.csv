@@ -1,0 +1,8 @@
+artifact_id,modality,source_url,citation_or_note,local_path,sha256,size_bytes
+drone_detection_thesis,vision+audio,https://github.com/DroneDetectionThesis/Drone-detection-dataset,Zenodo mirror: https://zenodo.org/records/5500576,data/raw/dronedetect_thesis,not_computed_large_dataset,
+tsms_drone,radar,https://plus.figshare.com/articles/dataset/Time-Synchronized_Multi-Sensor_Drone_Dataset_TSMS-Drone_/30027313,Paper: https://www.nature.com/articles/s41597-026-06802-6,data/raw/tsms_drone,not_computed_large_dataset,
+metrics_unimodal.csv,derived,local_final_run,Derived from verified full-data final run,results/metrics_unimodal.csv,e7a53b51debc20862d7fccf74cd0ee49f3ad6349c9526f5113a6011383a458e4,224
+metrics_fusion.csv,derived,local_final_run,Derived from verified full-data final run,results/metrics_fusion.csv,f3626ac2425a9744da33e66c6a274724c1874003fe4915a58a53ac522f86d1d5,306
+preds_fusion.csv,derived,local_final_run,Derived from verified full-data final run,results/preds_fusion.csv,1bdc4ece855f5e8e121bc20b82dfaf0f88c706d84283dd9a3694e5cc665c2ee3,1812111
+ablation_table.csv,derived,local_final_run,Derived from verified full-data final run,results/ablation_table.csv,f3626ac2425a9744da33e66c6a274724c1874003fe4915a58a53ac522f86d1d5,306
+missing_modality.csv,derived,local_final_run,Derived from verified full-data final run,results/missing_modality.csv,ecafed8e9251490dabeb0f7b6c6345b491ab1c0c83a0ec67ef71e1fe89d1281c,2089
