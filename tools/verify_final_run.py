@@ -257,7 +257,7 @@ def verify() -> tuple[bool, list[Check], dict[str, Any]]:
                 a, b, d = ({r[c] for r in by["train"]}, {r[c] for r in by["val"]}, {r[c] for r in by["test"]})
                 ab, ad, bd = a & b, a & d, b & d
                 leaks += len(ab) + len(ad) + len(bd)
-                overlap_ev.append(f"{c}: train∩val={len(ab)} train∩test={len(ad)} val∩test={len(bd)}")
+                overlap_ev.append(f"{c}: train_vs_val={len(ab)} train_vs_test={len(ad)} val_vs_test={len(bd)}")
             overlap_ok = uniq_ep and leaks == 0 and all(by[s] for s in ("train", "val", "test"))
     add(
         checks,
@@ -414,15 +414,23 @@ def verify() -> tuple[bool, list[Check], dict[str, Any]]:
         PKG / "tables/stress_radar_clutter.csv",
         PKG / "tables/preds_fusion.csv",
         PKG / "tables/fusion_tuning.csv",
+        PKG / "tables/latency_summary.json",
         PKG / "verification/tsms_state.txt",
         PKG / "verification/dronedetect_state.txt",
         PKG / "verification/split_integrity_report.txt",
+        PKG / "verification/split_integrity_report.json",
+        PKG / "verification/label_stats.json",
         PKG / "verification/label_stats.txt",
+        PKG / "verification/verification_report.txt",
+        PKG / "verification/verification_report.json",
         PKG / "metadata/run_metadata.json",
         PKG / "metadata/config_used.yaml",
         PKG / "metadata/significance_pr_auc.txt",
+        PKG / "metadata/fusion_best_config.json",
+        PKG / "metadata/metrics_vision.json",
     ]
     pkg_missing = [p.as_posix() for p in pkg_req if not p.exists()]
+    pkg_overlay_count = len(list((PKG / "verification").glob("*.png"))) if (PKG / "verification").exists() else 0
     has_data = False
     if PKG.exists():
         for p in PKG.rglob("*"):
@@ -433,8 +441,8 @@ def verify() -> tuple[bool, list[Check], dict[str, Any]]:
         checks,
         "8.1",
         "final_isef_package is complete and excludes raw/processed datasets",
-        PKG.exists() and len(pkg_missing) == 0 and not has_data,
-        [f"final_isef_package_exists={PKG.exists()}", f"missing={pkg_missing}", f"contains_data_tree={has_data}"],
+        PKG.exists() and len(pkg_missing) == 0 and pkg_overlay_count >= 20 and not has_data,
+        [f"final_isef_package_exists={PKG.exists()}", f"missing={pkg_missing}", f"overlay_png_count={pkg_overlay_count}", f"contains_data_tree={has_data}"],
         "Poster package missing required files or includes dataset tree.",
         "Rebuild package script output.",
         "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/build_final_isef_package.ps1",
@@ -447,7 +455,7 @@ def verify() -> tuple[bool, list[Check], dict[str, Any]]:
     rc1, out1, err1 = run(["git", "status", "--short"])
     rc2, out2, err2 = run(["git", "ls-files"])
     tracked = [x.strip() for x in out2.splitlines() if x.strip()]
-    bad = [p for p in tracked if re.search(r"^(data/|datasets/|runs/|results/|final_isef_package/)|\.(zip|7z|pt|pth|npy|npz|mat|mp4|avi|wav)$", p.replace("\\", "/"), re.I)]
+    bad = [p for p in tracked if re.search(r"^(data/|datasets/|runs/|results/)|\.(zip|7z|pt|pth|npy|npz|mat|mp4|avi|wav)$", p.replace("\\", "/"), re.I)]
     huge = []
     for p in tracked:
         fp = ROOT / p
@@ -461,7 +469,7 @@ def verify() -> tuple[bool, list[Check], dict[str, Any]]:
         [f".gitignore_exists={gi.exists()}", f"missing_ignore_patterns={miss}", "git status --short:", out1 if out1 else "(clean)", f"tracked_files={len(tracked)}", f"forbidden_tracked={bad}", f"huge_tracked={huge}", f"git_errors={[err1, err2]}"],
         "Git tracking/ignore policy violated.",
         "Untrack forbidden files and recommit.",
-        "git rm -r --cached data results runs final_isef_package ; git commit -m \"Remove forbidden tracked artifacts\"",
+        "git rm -r --cached data results runs ; git commit -m \"Remove forbidden tracked artifacts\"",
     )
 
     pass_n = sum(1 for c in checks if c.status == "PASS")

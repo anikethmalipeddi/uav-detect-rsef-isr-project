@@ -1,0 +1,36 @@
+{
+  "parsed_label_files": 650,
+  "videos": 650,
+  "boxes": 215720,
+  "class_counts": {
+    "DRONE": 86922,
+    "BIRD": 50448,
+    "AIRPLANE": 41829,
+    "HELICOPTER": 36521
+  },
+  "video_split_counts": {
+    "train": 525,
+    "test": 65,
+    "val": 60
+  },
+  "box_quality": {
+    "total_boxes": 215720,
+    "invalid_boxes": 0,
+    "invalid_fraction": 0.0
+  },
+  "overlay_count": 80,
+  "overlay_dir": "results\\label_viz",
+  "total_label_rows": 203328,
+  "empty_label_rows": 86,
+  "empty_label_rate": 0.0004229619137551149,
+  "per_clip_summary_csv": "results\\label_per_clip_summary.csv",
+  "yolo": {
+    "total_images": 51078,
+    "total_positive": 51056,
+    "positive_fraction": 0.999569286189749
+  },
+  "yolo_dataset_yaml": "data\\processed\\vision_yolo\\dataset.yaml",
+  "label_csv": "data\\processed\\vision_labels\\labels_long.csv",
+  "label_jsonl": "data\\processed\\vision_labels\\labels_long.jsonl",
+  "video_csv": "data\\processed\\vision_labels\\videos.csv"
+}

@@ -1,0 +1,26 @@
+DroneDetectionThesis Verification
+root=data\raw\dronedetect_thesis\Data
+required_dirs_ok=True
+video_v_count=285
+video_ir_count=365
+label_v_count=285
+label_ir_count=365
+audio_count=90
+min_video_v=285
+min_video_ir=365
+min_label_v=285
+min_label_ir=365
+min_audio=90
+expect_video_v=285
+expect_video_ir=365
+expect_label_v=285
+expect_label_ir=365
+expect_audio=90
+exact_count_checks={'video_v_exact_ok': True, 'video_ir_exact_ok': True, 'label_v_exact_ok': True, 'label_ir_exact_ok': True, 'audio_exact_ok': True}
+exact_counts_ok=True
+total_size_gb=0.331
+min_total_gb=0.3
+min_size_ok=True
+DRONEDETECT_STATE=COMPLETE
+FULL_DRONEDETECT_PRESENT=YES
+COMPLETE

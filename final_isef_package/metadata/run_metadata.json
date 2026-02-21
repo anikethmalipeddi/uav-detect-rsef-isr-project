@@ -1,0 +1,192 @@
+{
+  "timestamp_utc": "2026-02-21T16:16:33.735384+00:00",
+  "machine": {
+    "node": "DESKTOP-RLP7CRM",
+    "platform": "Windows-10-10.0.26200-SP0",
+    "processor": "AMD64 Family 26 Model 68 Stepping 0, AuthenticAMD",
+    "python_version": "3.11.14 | packaged by conda-forge | (main, Jan 26 2026, 23:39:55) [MSC v.1944 64 bit (AMD64)]"
+  },
+  "torch": {
+    "available": true,
+    "torch_version": "2.10.0+cu128",
+    "cuda_available": true,
+    "cuda_version": "12.8",
+    "device_count": 1,
+    "devices": [
+      "NVIDIA GeForce RTX 5070 Ti"
+    ]
+  },
+  "git": {
+    "commit": "2e769c8a1dc2acc933ff47a53ddc3c3d4f523ecf",
+    "branch": "main",
+    "dirty": false
+  },
+  "seed": 42,
+  "paths": {
+    "episodes": "data\\processed\\episodes\\episodes.csv",
+    "features": "data\\processed\\episodes\\features_cache.npz",
+    "tsms_state": "results\\tsms_state.json",
+    "dronedetect_state": "results\\dronedetect_state.json",
+    "label_stats": "results\\label_stats.json",
+    "fusion_best": "results\\fusion_best_config.json",
+    "fusion_tuning": "results\\fusion_tuning.csv",
+    "config_used": "results\\config_used.yaml"
+  },
+  "dataset_state": {
+    "raw_size_gb": 372.889,
+    "processed_size_gb": 11.934,
+    "episodes_exists": true,
+    "features_exists": true,
+    "tsms_state": {
+      "root": "data\\raw\\tsms_drone",
+      "catalog_csv": "data\\raw\\tsms_drone\\figshare_files.csv",
+      "expected_archives": 85,
+      "expected_archive_entries": 77,
+      "expected_nonarchive_entries": 8,
+      "required_entries": 77,
+      "required_extracted_ok_count": 77,
+      "optional_entries": 8,
+      "optional_extracted_ok_count": 8,
+      "extracted_ok_count": 85,
+      "archive_exists_count": 8,
+      "archive_size_ok_count": 8,
+      "bad_archive_count": 0,
+      "min_extracted_files_per_archive": 1000,
+      "total_size_gb": 372.271,
+      "min_total_gb": 150.0,
+      "min_size_ok": true,
+      "required_dirs": [
+        "data\\raw\\tsms_drone\\TSMS-Drone\\Dataset",
+        "data\\raw\\tsms_drone\\TSMS-Drone\\Dataset\\FMCW Radar"
+      ],
+      "required_dirs_ok": true,
+      "complete": true,
+      "missing_extracted": [],
+      "optional_missing": [],
+      "bad_archives": []
+    },
+    "dronedetect_state": {
+      "root": "data\\raw\\dronedetect_thesis\\Data",
+      "required_dirs_ok": true,
+      "video_v_count": 285,
+      "video_ir_count": 365,
+      "label_v_count": 285,
+      "label_ir_count": 365,
+      "audio_count": 90,
+      "min_video_v": 285,
+      "min_video_ir": 365,
+      "min_label_v": 285,
+      "min_label_ir": 365,
+      "min_audio": 90,
+      "expect_video_v": 285,
+      "expect_video_ir": 365,
+      "expect_label_v": 285,
+      "expect_label_ir": 365,
+      "expect_audio": 90,
+      "exact_count_checks": {
+        "video_v_exact_ok": true,
+        "video_ir_exact_ok": true,
+        "label_v_exact_ok": true,
+        "label_ir_exact_ok": true,
+        "audio_exact_ok": true
+      },
+      "exact_counts_ok": true,
+      "missing_video_v_labels": [],
+      "missing_video_ir_labels": [],
+      "orphan_v_labels": [],
+      "orphan_ir_labels": [],
+      "total_size_gb": 0.331,
+      "min_total_gb": 0.3,
+      "min_size_ok": true,
+      "complete": true
+    },
+    "label_stats": {
+      "parsed_label_files": 650,
+      "videos": 650,
+      "boxes": 215720,
+      "class_counts": {
+        "DRONE": 86922,
+        "BIRD": 50448,
+        "AIRPLANE": 41829,
+        "HELICOPTER": 36521
+      },
+      "video_split_counts": {
+        "train": 525,
+        "test": 65,
+        "val": 60
+      },
+      "box_quality": {
+        "total_boxes": 215720,
+        "invalid_boxes": 0,
+        "invalid_fraction": 0.0
+      },
+      "overlay_count": 80,
+      "overlay_dir": "results\\label_viz",
+      "total_label_rows": 203328,
+      "empty_label_rows": 86,
+      "empty_label_rate": 0.0004229619137551149,
+      "per_clip_summary_csv": "results\\label_per_clip_summary.csv",
+      "yolo": {
+        "total_images": 51078,
+        "total_positive": 51056,
+        "positive_fraction": 0.999569286189749
+      },
+      "yolo_dataset_yaml": "data\\processed\\vision_yolo\\dataset.yaml",
+      "label_csv": "data\\processed\\vision_labels\\labels_long.csv",
+      "label_jsonl": "data\\processed\\vision_labels\\labels_long.jsonl",
+      "video_csv": "data\\processed\\vision_labels\\videos.csv"
+    },
+    "full_dataset_verified": {
+      "tsms": true,
+      "dronedetect": true,
+      "all_modalities_full": true
+    }
+  },
+  "fusion": {
+    "best_config": {
+      "selected_config_id": 14,
+      "selection_metric": "val_pr_auc_gate",
+      "selected_config": {
+        "epochs": 260,
+        "batch_size": 256,
+        "hidden1": 96,
+        "hidden2": 48,
+        "gate_dropout": 0.25,
+        "weight_decay": 0.0001,
+        "lr": 0.0005,
+        "drop_one": 0.1,
+        "drop_two": 0.03,
+        "aux_weight": 0.0
+      },
+      "val_metrics": {
+        "avg": 0.7387092267750666,
+        "static": 0.8388383318395214,
+        "gate": 0.8457070286890576,
+        "gate_noq": 0.8439580185832002
+      },
+      "tuning_csv": "results\\fusion_tuning.csv"
+    },
+    "tuning_csv_rows": 16,
+    "tuning_csv_path": "results\\fusion_tuning.csv"
+  },
+  "config_snapshot": {
+    "conda_env": "uavmm",
+    "conda_exe": "C:\\Users\\Aniketh\\miniforge3\\Scripts\\conda.exe",
+    "seed": 42,
+    "target_episodes": 4000,
+    "audio_epochs": 50,
+    "radar_epochs": 50,
+    "gate_epochs": 260,
+    "gate_lr": 0.0005,
+    "gate_drop_one": 0.1,
+    "gate_drop_two": 0.03,
+    "gate_aux_weight": 0,
+    "fusion_max_configs": 16,
+    "yolo_epochs": 100,
+    "yolo_imgsz": 640,
+    "yolo_frame_step": 4,
+    "yolo_run_name": "uavmm_yolov8n"
+  },
+  "final_run_eligible": true,
+  "warnings": []
+}

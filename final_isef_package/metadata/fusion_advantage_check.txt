@@ -1,0 +1,10 @@
+Fusion Advantage Check
+metrics=results\metrics_fusion.csv
+split=test
+metric=pr_auc
+F-AVG=0.850570611
+F-STATIC=0.884556850
+F-GATE=0.890555659
+GATE_MINUS_AVG=0.039985048
+GATE_MINUS_STATIC=0.005998808
+FUSION_ADVANTAGE=PASS

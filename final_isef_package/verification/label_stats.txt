@@ -1,0 +1,47 @@
+Label Conversion Stats
+mat_root=data\raw\dronedetect_thesis\Data
+parsed_label_files=650
+videos=650
+boxes=215720
+invalid_boxes=0
+invalid_fraction=0.0
+total_label_rows=203328
+empty_label_rows=86
+empty_label_rate=0.000423
+overlay_count=80
+overlay_dir=results\label_viz
+per_clip_summary_csv=results\label_per_clip_summary.csv
+label_csv=data\processed\vision_labels\labels_long.csv
+label_jsonl=data\processed\vision_labels\labels_long.jsonl
+video_csv=data\processed\vision_labels\videos.csv
+yolo_dataset_yaml=data\processed\vision_yolo\dataset.yaml
+Class counts:
+- DRONE: 86922
+- BIRD: 50448
+- AIRPLANE: 41829
+- HELICOPTER: 36521
+Video split counts:
+- train: 525
+- test: 65
+- val: 60
+Per-clip summary sample (top 20 by boxes):
+- V_BIRD_005 split=test boxes=1765 label_rows=302 frames_with_boxes=302 empty_label_rows=0
+- IR_BIRD_027 split=train boxes=1240 label_rows=319 frames_with_boxes=319 empty_label_rows=0
+- V_BIRD_009 split=test boxes=1229 label_rows=325 frames_with_boxes=325 empty_label_rows=0
+- V_BIRD_017 split=val boxes=863 label_rows=306 frames_with_boxes=306 empty_label_rows=0
+- V_HELICOPTER_040 split=train boxes=851 label_rows=316 frames_with_boxes=316 empty_label_rows=0
+- V_BIRD_023 split=train boxes=797 label_rows=327 frames_with_boxes=327 empty_label_rows=0
+- IR_BIRD_035 split=train boxes=748 label_rows=327 frames_with_boxes=327 empty_label_rows=0
+- V_BIRD_020 split=train boxes=676 label_rows=327 frames_with_boxes=327 empty_label_rows=0
+- IR_DRONE_147 split=train boxes=650 label_rows=325 frames_with_boxes=325 empty_label_rows=0
+- IR_DRONE_144 split=train boxes=638 label_rows=319 frames_with_boxes=319 empty_label_rows=0
+- IR_DRONE_146 split=train boxes=626 label_rows=313 frames_with_boxes=313 empty_label_rows=0
+- IR_BIRD_038 split=train boxes=614 label_rows=307 frames_with_boxes=307 empty_label_rows=0
+- IR_DRONE_145 split=train boxes=614 label_rows=307 frames_with_boxes=307 empty_label_rows=0
+- V_DRONE_106 split=test boxes=608 label_rows=304 frames_with_boxes=304 empty_label_rows=0
+- IR_BIRD_007 split=train boxes=602 label_rows=301 frames_with_boxes=301 empty_label_rows=0
+- IR_DRONE_143 split=train boxes=602 label_rows=301 frames_with_boxes=301 empty_label_rows=0
+- V_DRONE_107 split=train boxes=600 label_rows=300 frames_with_boxes=300 empty_label_rows=0
+- IR_BIRD_018 split=train boxes=594 label_rows=317 frames_with_boxes=317 empty_label_rows=0
+- IR_BIRD_044 split=train boxes=577 label_rows=327 frames_with_boxes=327 empty_label_rows=0
+- V_BIRD_008 split=train boxes=570 label_rows=321 frames_with_boxes=321 empty_label_rows=0

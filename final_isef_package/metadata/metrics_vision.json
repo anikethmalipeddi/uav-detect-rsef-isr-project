@@ -1,0 +1,7 @@
+{
+  "map50_95": 0.3966958497721963,
+  "map50": 0.7958162589817714,
+  "run_name": "uavmm_yolov8n",
+  "weights_path": "C:\\Users\\Aniketh\\uav-detect\\runs\\detect\\runs\\detect\\uavmm_yolov8n\\weights\\best.pt",
+  "save_dir": "C:\\Users\\Aniketh\\uav-detect\\runs\\detect\\runs\\detect\\uavmm_yolov8n"
+}

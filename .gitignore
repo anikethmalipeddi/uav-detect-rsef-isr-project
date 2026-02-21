@@ -26,7 +26,17 @@ data/processed/
 datasets/
 results/
 !results/.gitkeep
-final_isef_package/
+# Poster kit is committed; keep it curated and lightweight.
+final_isef_package/*
+!final_isef_package/README_CHECKLIST.txt
+!final_isef_package/tables/
+!final_isef_package/tables/**
+!final_isef_package/figures/
+!final_isef_package/figures/**
+!final_isef_package/verification/
+!final_isef_package/verification/**
+!final_isef_package/metadata/
+!final_isef_package/metadata/**
 runs/
 wandb/
 logs/

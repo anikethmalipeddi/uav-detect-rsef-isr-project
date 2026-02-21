@@ -1,0 +1,20 @@
+TSMS Verification
+root=data\raw\tsms_drone
+catalog=data\raw\tsms_drone\figshare_files.csv
+expected_archives=85
+required_entries=77
+required_extracted_ok_count=77
+optional_entries=8
+optional_extracted_ok_count=8
+extracted_ok_count=85
+archive_exists_count=8
+archive_size_ok_count=8
+bad_archive_count=0
+min_extracted_files_per_archive=1000
+total_size_gb=372.271
+min_total_gb=150.0
+min_size_ok=True
+required_dirs_ok=True
+TSMS_STATE=COMPLETE
+TSMS_DATASET_COMPLETE=TRUE
+COMPLETE

@@ -1,0 +1,12 @@
+Split Integrity Report
+episodes=data\processed\episodes\episodes.csv
+rows=4000
+unique_episode_id=4000
+split_counts={'train': 3200, 'val': 400, 'test': 400}
+src_video_id_overlap={'train_vs_val': 0, 'train_vs_test': 0, 'val_vs_test': 0}
+src_video_id_overlap_examples={'train_vs_val': [], 'train_vs_test': [], 'val_vs_test': []}
+src_audio_id_overlap={'train_vs_val': 0, 'train_vs_test': 0, 'val_vs_test': 0}
+src_audio_id_overlap_examples={'train_vs_val': [], 'train_vs_test': [], 'val_vs_test': []}
+src_radar_id_overlap={'train_vs_val': 0, 'train_vs_test': 0, 'val_vs_test': 0}
+src_radar_id_overlap_examples={'train_vs_val': [], 'train_vs_test': [], 'val_vs_test': []}
+SPLIT_INTEGRITY=PASS

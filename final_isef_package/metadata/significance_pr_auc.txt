@@ -1,0 +1,14 @@
+Bootstrap PR-AUC Significance
+predictions=results\preds_fusion.csv
+split=test
+n_bootstrap=2000
+
+Comparison: F-GATE - F-AVG
+mean_diff=0.039713
+ci95=(0.003825, 0.071903)
+fraction_le_zero=0.014500
+
+Comparison: F-GATE - F-STATIC
+mean_diff=0.004965
+ci95=(-0.004545, 0.017196)
+fraction_le_zero=0.209500

@@ -1,0 +1,23 @@
+{
+  "selected_config_id": 14,
+  "selection_metric": "val_pr_auc_gate",
+  "selected_config": {
+    "epochs": 260,
+    "batch_size": 256,
+    "hidden1": 96,
+    "hidden2": 48,
+    "gate_dropout": 0.25,
+    "weight_decay": 0.0001,
+    "lr": 0.0005,
+    "drop_one": 0.1,
+    "drop_two": 0.03,
+    "aux_weight": 0.0
+  },
+  "val_metrics": {
+    "avg": 0.7387092267750666,
+    "static": 0.8388383318395214,
+    "gate": 0.8457070286890576,
+    "gate_noq": 0.8439580185832002
+  },
+  "tuning_csv": "results\\fusion_tuning.csv"
+}

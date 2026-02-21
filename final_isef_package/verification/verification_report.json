@@ -1,0 +1,186 @@
+{
+  "generated_utc": "2026-02-21T16:44:28.641070+00:00",
+  "repo_root": "C:\\Users\\Aniketh\\uav-detect",
+  "overall_status": "PASS",
+  "pass_count": 12,
+  "fail_count": 0,
+  "checks": [
+    {
+      "check_id": "1.1",
+      "title": "TSMS full verification evidence is COMPLETE",
+      "status": "PASS",
+      "evidence": [
+        "path=C:/Users/Aniketh/uav-detect/results/tsms_state.txt exists=True",
+        "required_extracted_ok_count=77/77",
+        "bad_archive_count=0",
+        "total_size_gb=372.271 min_total_gb=150.0"
+      ],
+      "reason": null,
+      "minimal_fix": null,
+      "rerun_command": null
+    },
+    {
+      "check_id": "1.2",
+      "title": "TSMS complete flag and COMPLETE log marker exist",
+      "status": "PASS",
+      "evidence": [
+        "flag_exists=True",
+        "complete_logs=['C:/Users/Aniketh/uav-detect/results/logs/download_tsms_full.log', 'C:/Users/Aniketh/uav-detect/results/tsms_download_final.log']"
+      ],
+      "reason": null,
+      "minimal_fix": null,
+      "rerun_command": null
+    },
+    {
+      "check_id": "1.3",
+      "title": "DroneDetectionThesis full verification evidence is COMPLETE",
+      "status": "PASS",
+      "evidence": [
+        "video_v=285",
+        "video_ir=365",
+        "label_v=285",
+        "label_ir=365",
+        "audio=90"
+      ],
+      "reason": null,
+      "minimal_fix": null,
+      "rerun_command": null
+    },
+    {
+      "check_id": "2.1",
+      "title": "Label conversion artifacts and validation sanity checks pass",
+      "status": "PASS",
+      "evidence": [
+        "labels_csv=True size=65964124",
+        "labels_jsonl=True size=108676560",
+        "videos_csv=True",
+        "label_viz_png_count=80",
+        "boxes=215720",
+        "invalid_fraction=0.0",
+        "class_counts={'DRONE': 86922, 'BIRD': 50448, 'AIRPLANE': 41829, 'HELICOPTER': 36521}"
+      ],
+      "reason": null,
+      "minimal_fix": null,
+      "rerun_command": null
+    },
+    {
+      "check_id": "3.1",
+      "title": "Split integrity report PASS and no src_* overlap across train/val/test",
+      "status": "PASS",
+      "evidence": [
+        "split_report_exists=True",
+        "split_report_pass=True",
+        "src_video_id: train_vs_val=0 train_vs_test=0 val_vs_test=0",
+        "src_audio_id: train_vs_val=0 train_vs_test=0 val_vs_test=0",
+        "src_radar_id: train_vs_val=0 train_vs_test=0 val_vs_test=0"
+      ],
+      "reason": null,
+      "minimal_fix": null,
+      "rerun_command": null
+    },
+    {
+      "check_id": "4.1",
+      "title": "All final artifacts exist and preds_fusion has required columns",
+      "status": "PASS",
+      "evidence": [
+        "missing_artifacts=[]",
+        "missing_figures=[]",
+        "pred_rows=4000",
+        "missing_pred_cols=[]"
+      ],
+      "reason": null,
+      "minimal_fix": null,
+      "rerun_command": null
+    },
+    {
+      "check_id": "4.2",
+      "title": "run_metadata confirms full datasets + no fallback; artifact timestamps are coherent",
+      "status": "PASS",
+      "evidence": [
+        "run_metadata_exists=True",
+        "full_datasets_verified=True",
+        "warnings_empty=True",
+        "timestamp_parse_ok=True",
+        "gate_passed_at=2026-02-21T09:57:14.147462+00:00",
+        "run_metadata_timestamp=2026-02-21T16:16:33.735384+00:00",
+        "artifacts_older_than_gate=[]",
+        "artifacts_newer_than_run_metadata=[]"
+      ],
+      "reason": null,
+      "minimal_fix": null,
+      "rerun_command": null
+    },
+    {
+      "check_id": "5.1",
+      "title": "Vision, Audio, Radar are separate modalities in scripts and outputs",
+      "status": "PASS",
+      "evidence": [
+        "separate_train_scripts=True",
+        "unimodal_run_ids=['UNI-A', 'UNI-R', 'UNI-V']"
+      ],
+      "reason": null,
+      "minimal_fix": null,
+      "rerun_command": null
+    },
+    {
+      "check_id": "6.1",
+      "title": "Fusion tuning uses train/val only; test used for frozen final eval; best config logged",
+      "status": "PASS",
+      "evidence": [
+        "tune_columns=['config_id', 'seed', 'hidden1', 'hidden2', 'gate_dropout', 'weight_decay', 'lr', 'drop_one', 'drop_two', 'aux_weight', 'epochs', 'batch_size', 'val_pr_auc_avg', 'val_pr_auc_static', 'val_pr_auc_gate', 'val_pr_auc_gate_noq', 'val_delta_gate_vs_avg', 'val_delta_gate_vs_static']",
+        "metrics_fusion_splits=['test']",
+        "best_config_logged=True"
+      ],
+      "reason": null,
+      "minimal_fix": null,
+      "rerun_command": null
+    },
+    {
+      "check_id": "7.1",
+      "title": "Reproducibility artifacts exist (run_all.ps1, run_metadata with git hash, config_used.yaml)",
+      "status": "PASS",
+      "evidence": [
+        "scripts/run_all.ps1_exists=True",
+        "run_all.ps1_exists=True",
+        "run_metadata_exists=True",
+        "git_commit_present=True",
+        "config_used_exists=True"
+      ],
+      "reason": null,
+      "minimal_fix": null,
+      "rerun_command": null
+    },
+    {
+      "check_id": "8.1",
+      "title": "final_isef_package is complete and excludes raw/processed datasets",
+      "status": "PASS",
+      "evidence": [
+        "final_isef_package_exists=True",
+        "missing=[]",
+        "overlay_png_count=20",
+        "contains_data_tree=False"
+      ],
+      "reason": null,
+      "minimal_fix": null,
+      "rerun_command": null
+    },
+    {
+      "check_id": "9.1",
+      "title": "GitHub-ready ignore/tracking audit passes (no forbidden or huge tracked files)",
+      "status": "PASS",
+      "evidence": [
+        ".gitignore_exists=True",
+        "missing_ignore_patterns=[]",
+        "git status --short:",
+        "M .gitignore\n M scripts/build_final_isef_package.ps1\n M tools/verify_final_run.py\n?? final_isef_package/",
+        "tracked_files=65",
+        "forbidden_tracked=[]",
+        "huge_tracked=[]",
+        "git_errors=['', '']"
+      ],
+      "reason": null,
+      "minimal_fix": null,
+      "rerun_command": null
+    }
+  ]
+}

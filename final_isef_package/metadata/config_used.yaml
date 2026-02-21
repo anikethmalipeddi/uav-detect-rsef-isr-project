@@ -1,0 +1,42 @@
+run_config_snapshot:
+  conda_env: uavmm
+  conda_exe: C:\Users\Aniketh\miniforge3\Scripts\conda.exe
+  seed: 42
+  target_episodes: 4000
+  audio_epochs: 50
+  radar_epochs: 50
+  gate_epochs: 260
+  gate_lr: 0.0005
+  gate_drop_one: 0.1
+  gate_drop_two: 0.03
+  gate_aux_weight: 0
+  fusion_max_configs: 16
+  yolo_epochs: 100
+  yolo_imgsz: 640
+  yolo_frame_step: 4
+  yolo_run_name: uavmm_yolov8n
+fusion_selection:
+  selected_config_id: 14
+  selection_metric: val_pr_auc_gate
+  selected_config:
+    epochs: 260
+    batch_size: 256
+    hidden1: 96
+    hidden2: 48
+    gate_dropout: 0.25
+    weight_decay: 0.0001
+    lr: 0.0005
+    drop_one: 0.1
+    drop_two: 0.03
+    aux_weight: 0.0
+  val_metrics:
+    avg: 0.7387092267750666
+    static: 0.8388383318395214
+    gate: 0.8457070286890576
+    gate_noq: 0.8439580185832002
+  tuning_csv: results\fusion_tuning.csv
+dataset_verification:
+  tsms_complete: true
+  dronedetect_complete: true
+  tsms_state_path: results\tsms_state.json
+  dronedetect_state_path: results\dronedetect_state.json
