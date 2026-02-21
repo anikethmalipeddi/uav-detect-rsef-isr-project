@@ -27,7 +27,7 @@ class Check:
 
 
 def read_text(path: Path) -> str:
-    for enc in ("utf-8", "utf-8-sig", "latin-1"):
+    for enc in ("utf-8", "utf-8-sig", "utf-16", "utf-16-le", "utf-16-be", "latin-1"):
         try:
             return path.read_text(encoding=enc)
         except Exception:
@@ -156,11 +156,8 @@ def verify() -> tuple[bool, list[Check], dict[str, Any]]:
     for p in logs:
         if not p.exists():
             continue
-        try:
-            blob = p.read_bytes()
-        except Exception:
-            blob = b""
-        if (b"TSMS_DOWNLOAD_COMPLETE=TRUE" in blob) or (b"\nCOMPLETE\n" in blob) or (b"\r\nCOMPLETE\r\n" in blob):
+        txt = read_text(p)
+        if ("TSMS_DOWNLOAD_COMPLETE=TRUE" in txt) or bool(re.search(r"(?m)^COMPLETE\s*$", txt)):
             hits.append(p.as_posix())
     add(
         checks,
