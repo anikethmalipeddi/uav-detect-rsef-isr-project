@@ -267,7 +267,7 @@ export default function Page() {
   const delta = frame && avgUnimodalScore !== null ? frame.modality_scores.fusion - avgUnimodalScore : 0;
   const deltaSignedPct = `${delta >= 0 ? "+" : ""}${(delta * 100).toFixed(1)}%`;
 
-  const outcomeMessage = (() => {
+  const frameOutcomeMessage = (() => {
     if (avgUnimodalScore === null || !avgUnimodalTop) return "No unimodal comparator available for this scenario frame.";
     if (avgUnimodalTop.label !== gt && fusionTop.label === gt) {
       return `Fusion correct while ${avgUnimodalLabel} is wrong.`;
@@ -283,11 +283,11 @@ export default function Page() {
     }
     return "Hard case across models.";
   })();
-  const deltaMessage = avgUnimodalScore !== null && frame
+  const secondaryDeltaMessage = avgUnimodalScore !== null && frame
     ? `Fusion ${deltaSignedPct} vs ${avgUnimodalLabel} prediction confidence.`
     : "No unimodal comparator available.";
-  const deltaSummary = avgUnimodalScore !== null && frame
-    ? `${outcomeMessage} (Fusion ${fmtPct(frame.modality_scores.fusion)} | ${avgUnimodalLabel} ${fmtPct(avgUnimodalScore)})`
+  const secondaryDeltaSummary = avgUnimodalScore !== null && frame
+    ? `${frameOutcomeMessage} (Fusion ${fmtPct(frame.modality_scores.fusion)} | ${avgUnimodalLabel} ${fmtPct(avgUnimodalScore)})`
     : "No unimodal comparator available.";
 
   const scenarioAudio = useMemo(
@@ -311,6 +311,18 @@ export default function Page() {
     if (!testFusionMetrics.length) return null;
     return [...testFusionMetrics].sort((a, b) => b.pr_auc - a.pr_auc)[0];
   }, [testFusionMetrics]);
+  const fAvgMetric = useMemo(
+    () => testFusionMetrics.find((m) => m.run_id === "F-AVG") ?? null,
+    [testFusionMetrics],
+  );
+  const primaryDeltaMessage = useMemo(() => {
+    if (!bestFusionMetric || !fAvgMetric) {
+      return "Primary benchmark unavailable (requires TEST metrics for best fusion and F-AVG).";
+    }
+    const d = bestFusionMetric.pr_auc - fAvgMetric.pr_auc;
+    const rel = fAvgMetric.pr_auc > 0 ? (d / fAvgMetric.pr_auc) * 100 : 0;
+    return `${bestFusionMetric.run_id} vs F-AVG (TEST PR-AUC): ${d >= 0 ? "+" : ""}${d.toFixed(3)} (${d >= 0 ? "+" : ""}${rel.toFixed(1)}% relative).`;
+  }, [bestFusionMetric, fAvgMetric]);
   const visionUnimodalMetric = useMemo(() => {
     const testUni = unimodalMetrics.filter((m) => m.split.toLowerCase() === "test");
     return testUni.find((m) => m.run_id === "UNI-V") ?? null;
@@ -549,8 +561,15 @@ export default function Page() {
 
           <section className="rounded-2xl border border-slate-300 bg-white p-3 shadow-sm">
             <h3 className="mb-2 text-xl font-black text-slate-900">Why Fusion Helped</h3>
-            <div className="mb-2 rounded-lg border border-cyan-200 bg-cyan-50 px-3 py-2 font-semibold text-cyan-900">{deltaMessage}</div>
-            <div className="mb-2 rounded border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800">{deltaSummary}</div>
+            <div className="mb-2 rounded-lg border border-cyan-200 bg-cyan-50 px-3 py-2 font-semibold text-cyan-900">
+              Primary: {primaryDeltaMessage}
+            </div>
+            <div className="mb-2 rounded border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800">
+              Secondary (live frame): {secondaryDeltaMessage}
+            </div>
+            <div className="mb-2 rounded border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800">
+              {secondaryDeltaSummary}
+            </div>
             <div className="space-y-2">
               {fusionDistEntries.map(([label, value]) => (
                 <div key={label} className="space-y-1">
