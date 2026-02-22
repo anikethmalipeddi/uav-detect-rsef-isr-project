@@ -568,7 +568,7 @@ export default function Page() {
               Secondary (live frame): {secondaryDeltaMessage}
             </div>
             <div className="mb-2 rounded border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-600">
-              Note: this secondary value is a single-frame confidence delta. Small per-frame gains across many frames drive the larger test-set PR-AUC gain shown above.
+              Note: this secondary value is a single-frame confidence delta. Small per-frame gains across many frames drive the larger test-set PR-AUC gains shown in the leaderboard below.
             </div>
             <div className="mb-2 rounded border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-800">
               {secondaryDeltaSummary}
