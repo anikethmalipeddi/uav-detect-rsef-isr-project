@@ -308,7 +308,7 @@ def pick_m2_samples(episodes: pd.DataFrame) -> M2Samples:
 
 
 def make_m1_pipeline(out_path: Path) -> list[str]:
-    fig = plt.figure(figsize=(20, 9.8), dpi=280, facecolor=BG)
+    fig = plt.figure(figsize=(20, 8.1), dpi=280, facecolor=BG)
     ax = fig.add_axes([0, 0, 1, 1], facecolor=BG)
     ax.axis("off")
     ax.set_xlim(0, 1)
@@ -327,8 +327,8 @@ def make_m1_pipeline(out_path: Path) -> list[str]:
 
     draw_stage_box(
         ax,
-        0.03,
-        0.69,
+        0.02,
+        0.68,
         0.22,
         0.22,
         "1) Dataset Verification",
@@ -340,8 +340,8 @@ def make_m1_pipeline(out_path: Path) -> list[str]:
     )
     draw_stage_box(
         ax,
-        0.28,
-        0.69,
+        0.265,
+        0.68,
         0.22,
         0.22,
         "2) Label + Preprocess",
@@ -353,8 +353,8 @@ def make_m1_pipeline(out_path: Path) -> list[str]:
     )
     draw_stage_box(
         ax,
-        0.53,
-        0.69,
+        0.51,
+        0.68,
         0.22,
         0.22,
         "3) Episode Builder",
@@ -366,10 +366,10 @@ def make_m1_pipeline(out_path: Path) -> list[str]:
     )
     draw_stage_box(
         ax,
-        0.79,
-        0.64,
-        0.18,
-        0.13,
+        0.75,
+        0.66,
+        0.22,
+        0.14,
         "Callouts",
         [
             "episode = 2.0 s (t0=0, t1=2)",
@@ -381,8 +381,8 @@ def make_m1_pipeline(out_path: Path) -> list[str]:
 
     draw_stage_box(
         ax,
-        0.06,
-        0.41,
+        0.03,
+        0.39,
         0.20,
         0.20,
         "Vision (UNI-V)",
@@ -395,8 +395,8 @@ def make_m1_pipeline(out_path: Path) -> list[str]:
     )
     draw_stage_box(
         ax,
-        0.31,
-        0.41,
+        0.275,
+        0.39,
         0.20,
         0.20,
         "Audio (UNI-A)",
@@ -409,8 +409,8 @@ def make_m1_pipeline(out_path: Path) -> list[str]:
     )
     draw_stage_box(
         ax,
-        0.56,
-        0.41,
+        0.52,
+        0.39,
         0.20,
         0.20,
         "Radar (UNI-R)",
@@ -424,10 +424,10 @@ def make_m1_pipeline(out_path: Path) -> list[str]:
 
     draw_stage_box(
         ax,
-        0.79,
-        0.40,
-        0.18,
+        0.75,
+        0.38,
         0.22,
+        0.23,
         "Feature Cache",
         [
             "features_cache.npz",
@@ -439,9 +439,9 @@ def make_m1_pipeline(out_path: Path) -> list[str]:
     )
     draw_stage_box(
         ax,
-        0.40,
-        0.13,
-        0.29,
+        0.37,
+        0.12,
+        0.31,
         0.18,
         "Fusion Variants (Logit-Level)",
         [
@@ -453,9 +453,9 @@ def make_m1_pipeline(out_path: Path) -> list[str]:
     )
     draw_stage_box(
         ax,
-        0.72,
-        0.13,
-        0.24,
+        0.70,
+        0.12,
+        0.27,
         0.18,
         "Final Output",
         [
@@ -466,23 +466,24 @@ def make_m1_pipeline(out_path: Path) -> list[str]:
         header_color="#2A9D8F",
     )
 
-    add_arrow(ax, (0.25, 0.80), (0.28, 0.80))
-    add_arrow(ax, (0.50, 0.80), (0.53, 0.80))
+    add_arrow(ax, (0.24, 0.79), (0.265, 0.79))
+    add_arrow(ax, (0.485, 0.79), (0.51, 0.79))
 
-    add_arrow(ax, (0.63, 0.69), (0.16, 0.61), rad=0.00)
-    add_arrow(ax, (0.64, 0.69), (0.41, 0.61), rad=0.00)
-    add_arrow(ax, (0.65, 0.69), (0.66, 0.61), rad=0.00)
+    # Aligned vertical fan-out from episode builder to unimodal branches.
+    add_arrow(ax, (0.13, 0.68), (0.13, 0.59))
+    add_arrow(ax, (0.375, 0.68), (0.375, 0.59))
+    add_arrow(ax, (0.62, 0.68), (0.62, 0.59))
 
-    add_arrow(ax, (0.26, 0.51), (0.79, 0.51))
-    add_arrow(ax, (0.51, 0.51), (0.79, 0.51))
-    add_arrow(ax, (0.76, 0.51), (0.79, 0.51))
+    # Clean left-to-right flow from unimodal logits/quality to feature cache.
+    add_arrow(ax, (0.23, 0.50), (0.75, 0.50))
 
-    add_arrow(ax, (0.88, 0.40), (0.55, 0.31))
-    add_arrow(ax, (0.69, 0.22), (0.72, 0.22))
+    # Feature cache to fusion and final outputs.
+    add_arrow(ax, (0.86, 0.38), (0.54, 0.30))
+    add_arrow(ax, (0.68, 0.21), (0.70, 0.21))
 
     ax.text(
         0.17,
-        0.34,
+        0.33,
         wrap(
             "Fusion feature vector x = [(logit,p,entropy)x3, q_vis(5), q_aud(4), q_rad(3), mask(3)]",
             66,
@@ -496,7 +497,7 @@ def make_m1_pipeline(out_path: Path) -> list[str]:
 
     ax.text(
         0.03,
-        0.03,
+        0.02,
         "Figure M1. End-to-end multimodal pipeline from verified raw datasets to final episode-level fused predictions.",
         ha="left",
         va="bottom",
@@ -593,7 +594,7 @@ def draw_icon_radar(ax: plt.Axes, cx: float, cy: float, s: float) -> None:
 
 
 def make_m3_unimodal_cards(out_path: Path) -> list[str]:
-    fig = plt.figure(figsize=(20, 7.6), dpi=280, facecolor=BG)
+    fig = plt.figure(figsize=(20, 6.5), dpi=280, facecolor=BG)
     ax = fig.add_axes([0, 0, 1, 1], facecolor=BG)
     ax.axis("off")
     ax.set_xlim(0, 1)
@@ -602,19 +603,19 @@ def make_m3_unimodal_cards(out_path: Path) -> list[str]:
     ax.text(0.5, 0.94, "Unimodal Branches (UNI-V / UNI-A / UNI-R)", ha="center", va="center", fontsize=24, fontweight="bold", color=TEXT_DARK)
 
     cards = [
-        (0.04, 0.17, 0.28, 0.68, "Vision Branch (UNI-V)", ACCENT_A, [
+        (0.03, 0.13, 0.30, 0.74, "Vision Branch (UNI-V)", ACCENT_A, [
             "YOLOv8n detector over frames in [t0, t1).",
             "Episode score = max drone confidence across frames.",
             "Converted to episode logit (vision_presence.csv).",
             "Used as logit_vis + quality q_vis(5).",
         ]),
-        (0.36, 0.17, 0.28, 0.68, "Audio Branch (UNI-A)", ACCENT_B, [
+        (0.35, 0.13, 0.30, 0.74, "Audio Branch (UNI-A)", ACCENT_B, [
             "Input tensor shape: [1 x 128 x 101] log-mel.",
             "AudioCNN: conv blocks -> pooled -> FC head.",
             "Objective: BCEWithLogits (pos_weight).",
             "Output: episode logit_aud.",
         ]),
-        (0.68, 0.17, 0.28, 0.68, "Radar Branch (UNI-R)", ACCENT_C, [
+        (0.67, 0.13, 0.30, 0.74, "Radar Branch (UNI-R)", ACCENT_C, [
             "Input tensor shape: [1 x 128 x 128] 2D map.",
             "Residual CNN with two downsampling stages.",
             "Objective: BCEWithLogits (pos_weight).",
@@ -624,8 +625,8 @@ def make_m3_unimodal_cards(out_path: Path) -> list[str]:
 
     for i, (x, y, w, h, title, col, lines) in enumerate(cards):
         draw_stage_box(ax, x, y, w, h, title, lines, header_color=col, body_color=WHITE)
-        cx = x + 0.83 * w
-        cy = y + 0.80 * h
+        cx = x + 0.90 * w
+        cy = y + 0.86 * h
         scale = w
         if i == 0:
             draw_icon_vision(ax, cx, cy, scale)
@@ -634,14 +635,9 @@ def make_m3_unimodal_cards(out_path: Path) -> list[str]:
         else:
             draw_icon_radar(ax, cx, cy, scale)
 
-        bx = x + 0.08 * w
-        by = y + 0.10 * h
-        for k, ww in enumerate([0.18, 0.26, 0.34]):
-            ax.add_patch(Rectangle((bx + 0.02 * k, by + 0.018 * k), ww * w, 0.022, facecolor=col, alpha=0.35, edgecolor=col))
-
     ax.text(
         0.03,
-        0.04,
+        0.025,
         "Figure M3. Three unimodal branches produce calibrated episode logits and modality-specific quality signals for fusion.",
         ha="left",
         fontsize=11.5,
@@ -651,7 +647,7 @@ def make_m3_unimodal_cards(out_path: Path) -> list[str]:
 
 
 def make_m4_fusion_gate(out_path: Path) -> list[str]:
-    fig = plt.figure(figsize=(20, 8.8), dpi=280, facecolor=BG)
+    fig = plt.figure(figsize=(20, 7.7), dpi=280, facecolor=BG)
     ax = fig.add_axes([0, 0, 1, 1], facecolor=BG)
     ax.axis("off")
     ax.set_xlim(0, 1)
@@ -662,9 +658,9 @@ def make_m4_fusion_gate(out_path: Path) -> list[str]:
     draw_stage_box(
         ax,
         0.03,
-        0.53,
+        0.50,
         0.33,
-        0.34,
+        0.35,
         "Input Feature Vector x (24-D)",
         [
             "[(logit,p,entropy) x3]",
@@ -676,10 +672,10 @@ def make_m4_fusion_gate(out_path: Path) -> list[str]:
 
     draw_stage_box(
         ax,
-        0.41,
-        0.59,
-        0.20,
-        0.22,
+        0.40,
+        0.58,
+        0.21,
+        0.24,
         "Gate Network",
         [
             "g = MLP(x)",
@@ -690,10 +686,10 @@ def make_m4_fusion_gate(out_path: Path) -> list[str]:
     )
     draw_stage_box(
         ax,
-        0.41,
+        0.40,
         0.34,
-        0.20,
-        0.22,
+        0.21,
+        0.21,
         "Masking Before Softmax",
         [
             "if m_k=0: g_k <- -1e9",
@@ -704,10 +700,10 @@ def make_m4_fusion_gate(out_path: Path) -> list[str]:
     )
     draw_stage_box(
         ax,
-        0.66,
-        0.53,
-        0.31,
-        0.34,
+        0.65,
+        0.48,
+        0.32,
+        0.37,
         "Adaptive Weights + Fused Logit",
         [
             "weights: w_v, w_a, w_r",
@@ -719,18 +715,20 @@ def make_m4_fusion_gate(out_path: Path) -> list[str]:
     labels = ["Vision", "Audio", "Radar"]
     vals = [0.63, 0.22, 0.15]
     for i, (lab, val) in enumerate(zip(labels, vals)):
-        y = 0.56 - i * 0.055
-        ax.text(0.70, y + 0.015, lab, fontsize=10.5, color=TEXT_DARK, ha="left", va="center")
-        ax.add_patch(Rectangle((0.78, y), 0.16, 0.02, facecolor="#D9E2EC", edgecolor="none"))
-        ax.add_patch(Rectangle((0.78, y), 0.16 * val, 0.02, facecolor="#2A9D8F", edgecolor="none"))
-        ax.text(0.95, y + 0.01, f"{100.0 * val:.0f}%", fontsize=9.5, color=TEXT_DARK, ha="right", va="center")
+        y = 0.57 - i * 0.055
+        bar_x = 0.77
+        bar_w = 0.15
+        ax.text(0.69, y + 0.012, lab, fontsize=10.5, color=TEXT_DARK, ha="left", va="center")
+        ax.add_patch(Rectangle((bar_x, y), bar_w, 0.018, facecolor="#D9E2EC", edgecolor="none"))
+        ax.add_patch(Rectangle((bar_x, y), bar_w * val, 0.018, facecolor="#2A9D8F", edgecolor="none"))
+        ax.text(0.935, y + 0.009, f"{100.0 * val:.0f}%", fontsize=9.5, color=TEXT_DARK, ha="right", va="center")
 
     draw_stage_box(
         ax,
-        0.66,
-        0.26,
-        0.31,
-        0.17,
+        0.65,
+        0.25,
+        0.32,
+        0.18,
         "F-GATE-NOQ Inset",
         [
             "same gate architecture",
@@ -741,7 +739,7 @@ def make_m4_fusion_gate(out_path: Path) -> list[str]:
         body_color="#F7F1FB",
     )
 
-    eq_x, eq_y, eq_w, eq_h = 0.03, 0.08, 0.94, 0.18
+    eq_x, eq_y, eq_w, eq_h = 0.03, 0.06, 0.94, 0.20
     eq_box = FancyBboxPatch(
         (eq_x, eq_y),
         eq_w,
@@ -790,11 +788,11 @@ def make_m4_fusion_gate(out_path: Path) -> list[str]:
         va="center",
     )
 
-    add_arrow(ax, (0.36, 0.70), (0.41, 0.70))
-    add_arrow(ax, (0.51, 0.59), (0.51, 0.56))
-    add_arrow(ax, (0.61, 0.46), (0.66, 0.64))
-    add_arrow(ax, (0.61, 0.70), (0.66, 0.70))
-    add_arrow(ax, (0.50, 0.34), (0.50, 0.26))
+    add_arrow(ax, (0.36, 0.69), (0.40, 0.69))
+    add_arrow(ax, (0.505, 0.58), (0.505, 0.55))
+    add_arrow(ax, (0.61, 0.69), (0.65, 0.69))
+    add_arrow(ax, (0.61, 0.47), (0.65, 0.62))
+    add_arrow(ax, (0.505, 0.34), (0.505, 0.26))
 
     ax.text(
         0.02,
