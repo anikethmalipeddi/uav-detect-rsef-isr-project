@@ -1,0 +1,25 @@
+Methodology Assets Manifest
+==========================
+
+M2 real-sample IDs (non-reused intent):
+- vision episode_id: 003602
+- audio episode_id: 003681
+- radar episode_id: 003625
+
+Likely excluded IDs from prior schematic picks:
+003610, 003705, 003731, 003798
+
+Outputs:
+- results/figures/method_M1.png :: Figure M1 anchor pipeline diagram
+- results/figures/method_M2.png :: Figure M2 modality visual strip (new real samples)
+- results/figures/method_M3.png :: Figure M3 unimodal branch cards
+- results/figures/method_M4.png :: Figure M4 adaptive fusion gate with formulas
+- results/figures/method_M5.png :: Figure M5 modality-dropout robustness diagram
+- results/figures/method_table_M1.png :: Table M1 inputs + preprocessing summary
+- results/figures/method_table_M1.csv :: Table M1 editable CSV
+- results/figures/method_table_M2.png :: Table M2 fusion variants definitions
+- results/figures/method_table_M2.csv :: Table M2 editable CSV
+- results/figures/method_table_M3.png :: Table M3 training protocol summary
+- results/figures/method_table_M3.csv :: Table M3 editable CSV
+- results/figures/method_manifest.txt :: Methodology outputs manifest
+- results/figures/method_qa_report.txt :: Methodology QA report

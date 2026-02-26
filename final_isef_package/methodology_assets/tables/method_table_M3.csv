@@ -1,0 +1,5 @@
+Stage,Model,Objective,Optimizer,LR,Batch,Epochs,Selection criterion,Output artifact
+Vision,YOLOv8n,YOLO detection loss,MuSGD (auto),auto,16,100,best val mAP50-95,results/metrics_vision.json + best.pt
+Audio,AudioCNN,BCEWithLogits,AdamW,1e-3,64,50,best val AP,results/checkpoints/best_audio.pt
+Radar,RadarCNN (residual),BCEWithLogits,AdamW,1e-3,64,50,best val AP,results/checkpoints/best_radar.pt
+Fusion,F-GATE / F-GATE-NOQ,BCEWithLogits on fused logit,AdamW,5e-4,256,260,best val PR-AUC (gate),"fusion_gate.pt, fusion_gate_noq.pt"

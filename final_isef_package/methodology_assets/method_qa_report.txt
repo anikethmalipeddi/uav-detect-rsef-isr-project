@@ -1,0 +1,12 @@
+Methodology Asset QA Report
+===========================
+Output directory: results/figures
+Total outputs: 12
+
+STATUS: PASS
+
+Checks passed:
+- text overlap/cutoff scan
+- image readability/openability
+- minimum resolution checks
+- output existence checks

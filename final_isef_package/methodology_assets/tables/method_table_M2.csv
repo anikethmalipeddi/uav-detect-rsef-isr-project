@@ -1,0 +1,5 @@
+Variant,Inputs used,Weight rule,Mask handling,Fusion level
+F-AVG,"logits l_v,l_a,l_r + mask m",w = m / sum(m),m_k=0 => w_k=0,logit-level (z = sum w_k l_k)
+F-STATIC,logits + learned alpha,w = softmax(mask(alpha)),mask(alpha_k): alpha_k or -1e9,logit-level
+F-GATE,x(24-D) + logits + mask,w = softmax(mask(MLP(x))),hard mask before softmax,logit-level
+F-GATE-NOQ,same as F-GATE,same as F-GATE,same hard mask,"quality dims zeroed: x[:,9:21]=0"

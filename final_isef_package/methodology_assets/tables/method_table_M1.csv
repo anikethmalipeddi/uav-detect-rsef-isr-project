@@ -1,0 +1,4 @@
+Modality,Raw Source,Episode Window,Representation,Tensor Shape,Normalization
+Vision,DroneDetectionThesis videos,2.0 s,YOLOv8n frame scan,frame stream,YOLO internal norm/letterbox
+Audio,DroneDetectionThesis WAV,2.0 s,log-mel spectrogram,128 x 101,per-window z-score
+Radar,TSMS-Drone FMCW radar,2.0 s sample,normalized 2D radar map,128 x 128,per-sample z-score
