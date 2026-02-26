@@ -474,7 +474,7 @@ def make_m1_pipeline(out_path: Path) -> list[str]:
     add_arrow(ax, (0.375, 0.68), (0.375, 0.59))
     add_arrow(ax, (0.62, 0.68), (0.62, 0.59))
 
-    # Inter-box flow only: three short arrows between branch cards and feature cache.
+    # Three short inter-box arrows (no line crossing inside cards).
     add_arrow(ax, (0.23, 0.50), (0.275, 0.50))  # Vision -> Audio gap
     add_arrow(ax, (0.475, 0.50), (0.52, 0.50))  # Audio -> Radar gap
     add_arrow(ax, (0.72, 0.50), (0.75, 0.50))   # Radar -> Feature cache gap
