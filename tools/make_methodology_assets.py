@@ -649,7 +649,7 @@ def make_m3_unimodal_cards(out_path: Path) -> list[str]:
 
 
 def make_m4_fusion_gate(out_path: Path) -> list[str]:
-    fig = plt.figure(figsize=(20, 7.7), dpi=280, facecolor=BG)
+    fig = plt.figure(figsize=(18, 9.4), dpi=280, facecolor=BG)
     ax = fig.add_axes([0, 0, 1, 1], facecolor=BG)
     ax.axis("off")
     ax.set_xlim(0, 1)
@@ -657,12 +657,15 @@ def make_m4_fusion_gate(out_path: Path) -> list[str]:
 
     ax.text(0.5, 0.95, "Adaptive Fusion Gate (F-GATE): Mechanism and Equations", ha="center", va="center", fontsize=24, fontweight="bold", color=TEXT_DARK)
 
+    main_x = 0.10
+    main_w = 0.56
+
     draw_stage_box(
         ax,
-        0.03,
-        0.50,
-        0.33,
-        0.35,
+        main_x,
+        0.77,
+        main_w,
+        0.16,
         "Input Feature Vector x (24-D)",
         [
             "[(logit,p,entropy) x3]",
@@ -674,10 +677,10 @@ def make_m4_fusion_gate(out_path: Path) -> list[str]:
 
     draw_stage_box(
         ax,
-        0.40,
-        0.58,
-        0.21,
-        0.24,
+        main_x,
+        0.60,
+        main_w,
+        0.14,
         "Gate Network",
         [
             "g = MLP(x)",
@@ -688,10 +691,10 @@ def make_m4_fusion_gate(out_path: Path) -> list[str]:
     )
     draw_stage_box(
         ax,
-        0.40,
-        0.34,
-        0.21,
-        0.21,
+        main_x,
+        0.43,
+        main_w,
+        0.13,
         "Masking Before Softmax",
         [
             "if m_k=0: g_k <- -1e9",
@@ -702,13 +705,12 @@ def make_m4_fusion_gate(out_path: Path) -> list[str]:
     )
     draw_stage_box(
         ax,
-        0.65,
-        0.48,
-        0.32,
-        0.37,
+        main_x,
+        0.22,
+        main_w,
+        0.19,
         "Adaptive Weights + Fused Logit",
         [
-            "weights: w_v, w_a, w_r",
             "z_fuse = sum_k w_k * l_k",
             "p_fuse = sigmoid(z_fuse)",
         ],
@@ -716,21 +718,22 @@ def make_m4_fusion_gate(out_path: Path) -> list[str]:
     )
     labels = ["Vision", "Audio", "Radar"]
     vals = [0.63, 0.22, 0.15]
+    ax.text(main_x + 0.03, 0.264, "weights: w_v, w_a, w_r", fontsize=11.0, color=TEXT_DARK, ha="left", va="center")
     for i, (lab, val) in enumerate(zip(labels, vals)):
-        y = 0.57 - i * 0.055
-        bar_x = 0.77
-        bar_w = 0.15
-        ax.text(0.69, y + 0.012, lab, fontsize=10.5, color=TEXT_DARK, ha="left", va="center")
+        y = 0.282 - i * 0.030
+        bar_x = main_x + 0.26
+        bar_w = 0.18
+        ax.text(main_x + 0.13, y + 0.009, lab, fontsize=10.5, color=TEXT_DARK, ha="left", va="center")
         ax.add_patch(Rectangle((bar_x, y), bar_w, 0.018, facecolor="#D9E2EC", edgecolor="none"))
         ax.add_patch(Rectangle((bar_x, y), bar_w * val, 0.018, facecolor="#2A9D8F", edgecolor="none"))
-        ax.text(0.935, y + 0.009, f"{100.0 * val:.0f}%", fontsize=9.5, color=TEXT_DARK, ha="right", va="center")
+        ax.text(bar_x + bar_w + 0.008, y + 0.009, f"{100.0 * val:.0f}%", fontsize=9.5, color=TEXT_DARK, ha="left", va="center")
 
     draw_stage_box(
         ax,
-        0.65,
-        0.25,
-        0.32,
-        0.18,
+        0.70,
+        0.52,
+        0.27,
+        0.19,
         "F-GATE-NOQ Inset",
         [
             "same gate architecture",
@@ -741,7 +744,7 @@ def make_m4_fusion_gate(out_path: Path) -> list[str]:
         body_color="#F7F1FB",
     )
 
-    eq_x, eq_y, eq_w, eq_h = 0.03, 0.06, 0.94, 0.20
+    eq_x, eq_y, eq_w, eq_h = 0.06, 0.03, 0.88, 0.15
     eq_box = FancyBboxPatch(
         (eq_x, eq_y),
         eq_w,
@@ -774,7 +777,7 @@ def make_m4_fusion_gate(out_path: Path) -> list[str]:
         eq_y + 0.060,
         r"$w = \mathrm{softmax}(\mathrm{masked}(g)),\ \mathrm{masked}(g_k)=g_k\ \mathrm{if}\ m_k=1,\ -10^9\ \mathrm{if}\ m_k=0$",
         transform=ax.transAxes,
-        fontsize=11.0,
+        fontsize=10.6,
         color=TEXT_DARK,
         ha="left",
         va="center",
@@ -784,21 +787,24 @@ def make_m4_fusion_gate(out_path: Path) -> list[str]:
         eq_y + 0.020,
         r"$z_{\mathrm{fuse}} = \sum_{k \in \{v,a,r\}} w_k l_k,\quad p_{\mathrm{fuse}}=\sigma(z_{\mathrm{fuse}})$",
         transform=ax.transAxes,
-        fontsize=11.0,
+        fontsize=10.6,
         color=TEXT_DARK,
         ha="left",
         va="center",
     )
 
-    add_arrow(ax, (0.36, 0.69), (0.40, 0.69))
-    add_arrow(ax, (0.505, 0.58), (0.505, 0.55))
-    add_arrow(ax, (0.61, 0.69), (0.65, 0.69))
-    add_arrow(ax, (0.61, 0.47), (0.65, 0.62))
-    add_arrow(ax, (0.505, 0.34), (0.505, 0.26))
+    # Primary vertical flow.
+    cx = main_x + 0.5 * main_w
+    add_arrow(ax, (cx, 0.77), (cx, 0.74))
+    add_arrow(ax, (cx, 0.60), (cx, 0.56))
+    add_arrow(ax, (cx, 0.43), (cx, 0.41))
+    add_arrow(ax, (cx, 0.22), (cx, 0.18))
+    # Optional side inset reference.
+    add_arrow(ax, (main_x + main_w, 0.67), (0.70, 0.62))
 
     ax.text(
         0.02,
-        0.03,
+        0.005,
         "Figure M4. F-GATE computes mask-aware adaptive modality weights and performs hard-excluded logit-level fusion.",
         ha="left",
         fontsize=11.5,
