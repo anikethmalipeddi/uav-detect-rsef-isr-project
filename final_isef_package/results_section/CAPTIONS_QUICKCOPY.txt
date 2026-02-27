@@ -1,0 +1,13 @@
+Table R1: Table R1. Episode-level TEST performance across unimodal and fusion variants at a fixed threshold of 0.5 (FAR = FP/(FP+TN)).
+Figure R1: Figure R1. TEST precision-recall curves for UNI-A, F-AVG, F-STATIC, F-GATE, and F-GATE-NOQ.
+Figure R2: Figure R2. TEST ROC curves for the same models as Figure R1, using identical episode-level predictions.
+Figure R3: Figure R3. Episode-level binary confusion matrices (threshold = 0.5) for UNI-V, UNI-A, UNI-R, F-AVG, F-STATIC, F-GATE, and F-GATE-NOQ.
+Figure R4: Figure R4. Missing-modality robustness on TEST across all_present, single-missing, and single-modality scenarios.
+Table R2: Table R2. Per-scenario missing-modality performance; UNI-best-available selects the strongest available unimodal branch for each scenario.
+Figure R5: Figure R5. Effect of quality signals: PR-AUC difference (F-GATE minus F-GATE-NOQ) over TEST and missing-modality scenarios.
+Table R3: Table R3. Overall TEST deltas for F-GATE relative to F-GATE-NOQ at threshold 0.5.
+Figure R6a: Figure R6a. Audio SNR stress sweep (TEST): F-GATE trend with unimodal TEST baselines shown as dashed references.
+Figure R6b: Figure R6b. Vision corruption stress sweep (TEST): F-GATE trend with unimodal TEST baselines shown as dashed references.
+Figure R6c: Figure R6c. Radar clutter stress sweep (TEST): F-GATE trend with unimodal TEST baselines shown as dashed references.
+Table R4: Table R4. Dataset split composition and class balance for train, validation, and held-out TEST episodes.
+Figure R7: Figure R7. Runtime summary of fusion methods (mean latency, with P95 context from the measured latency report).

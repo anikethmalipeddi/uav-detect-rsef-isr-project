@@ -1,0 +1,4 @@
+Split,Episodes,Positives,Negatives,PositiveRate
+test,400,200,200,0.5
+train,3200,1600,1600,0.5
+val,400,200,200,0.5
