@@ -600,8 +600,8 @@ def image_thumbnail(ax: plt.Axes, bbox: list[float], image: Image.Image | np.nda
 
 def draw_system_architecture(data: dict[str, object]) -> None:
     fig, ax = new_slide()
-    ax.text(0.06, 0.92, "System architecture", fontsize=30, color=TEXT, weight="bold")
-    row_y = [0.72, 0.48, 0.24]
+    ax.text(0.06, 0.90, "System architecture", fontsize=29, color=TEXT, weight="bold")
+    row_y = [0.66, 0.40, 0.14]
     input_cards = [
         ("Vision input", VISION, data["vision_drone"], icon_camera),
         ("Audio input", AUDIO, data["audio_array"], icon_waveform),
@@ -609,42 +609,45 @@ def draw_system_architecture(data: dict[str, object]) -> None:
     ]
     model_titles = ["YOLO-based detector", "CNN on spectrogram\nfeatures", "CNN on range-Doppler\nfeatures"]
     quality_titles = ["image quality /\nconfidence", "acoustic quality", "clutter-related\nquality"]
+    input_x, input_w, input_h = 0.04, 0.18, 0.15
+    model_x, model_w, model_h = 0.29, 0.24, 0.15
+    quality_x, quality_w, quality_h = 0.57, 0.12, 0.065
     for y, (label, color, thumb, icon), model_title, quality_title in zip(row_y, input_cards, model_titles, quality_titles):
-        header_card(ax, 0.04, y, 0.19, 0.14, title=label, accent=color)
+        header_card(ax, input_x, y, input_w, input_h, title=label, accent=color, title_size=18)
         image_thumbnail(
             ax,
-            [0.056, y + 0.020, 0.055, 0.08],
+            [input_x + 0.016, y + 0.024, 0.055, 0.060],
             thumb,
             cmap="magma" if isinstance(thumb, np.ndarray) and label.startswith("Audio") else ("viridis" if isinstance(thumb, np.ndarray) else None),
             vmin=float(np.percentile(thumb, 2)) if isinstance(thumb, np.ndarray) and label.startswith("Radar") else None,
             vmax=float(np.percentile(thumb, 99)) if isinstance(thumb, np.ndarray) and label.startswith("Radar") else None,
         )
-        icon(ax, 0.145, y + 0.055, 0.85, color)
-        header_card(ax, 0.28, y, 0.25, 0.14, title=model_title, accent=color, title_size=16)
+        icon(ax, input_x + 0.105, y + 0.052, 0.72, color)
+        header_card(ax, model_x, y, model_w, model_h, title=model_title, accent=color, title_size=15.5)
         body_map = {
             "YOLO-based detector": ["Episode score from detector confidence", "Binary presence signal + features"],
             "CNN on spectrogram\nfeatures": ["Log-mel input [1 x 128 x 101]", "Episode logit + audio quality"],
             "CNN on range-Doppler\nfeatures": ["2D RD map input [1 x 128 x 128]", "Episode logit + radar quality"],
         }
         for idx, line in enumerate(body_map[model_title]):
-            ax.text(0.295, y + 0.075 - idx * 0.040, line, fontsize=12.0, color=TEXT)
-        round_box(ax, 0.56, y + 0.035, 0.12, 0.06, face=BG_SOFT, edge=color, lw=1.6, radius=0.02)
-        ax.text(0.62, y + 0.065, quality_title, ha="center", va="center", fontsize=11.5, color=color, weight="bold")
-        arrow(ax, (0.23, y + 0.07), (0.28, y + 0.07), color=color, lw=2.4)
-        arrow(ax, (0.53, y + 0.07), (0.56, y + 0.07), color=color, lw=2.4)
-        arrow(ax, (0.68, y + 0.07), (0.69, 0.50), color=SLATE_DARK, lw=2.2)
+            ax.text(model_x + 0.015, y + 0.054 - idx * 0.036, line, fontsize=11.6, color=TEXT)
+        round_box(ax, quality_x, y + 0.043, quality_w, quality_h, face=BG_SOFT, edge=color, lw=1.8, radius=0.022)
+        ax.text(quality_x + quality_w / 2, y + 0.075, quality_title, ha="center", va="center", fontsize=10.6, color=color, weight="bold")
+        arrow(ax, (input_x + input_w, y + 0.075), (model_x, y + 0.075), color=color, lw=2.6)
+        arrow(ax, (model_x + model_w, y + 0.075), (quality_x, y + 0.075), color=color, lw=2.6)
+        arrow(ax, (quality_x + quality_w, y + 0.075), (0.69, y + 0.075), color=color, lw=2.4)
 
-    header_card(ax, 0.68, 0.29, 0.18, 0.42, title="Fusion comparison", accent=FUSION)
+    header_card(ax, 0.69, 0.20, 0.18, 0.48, title="Fusion comparison", accent=FUSION, title_size=16.5)
     methods = [("Average", SLATE), ("Static weighting", SLATE_DARK), ("Adaptive gating", FUSION)]
     for i, (name, color) in enumerate(methods):
-        yy = 0.58 - i * 0.105
-        round_box(ax, 0.700, yy, 0.14, 0.072, face=BG_SOFT, edge=color, lw=1.6, radius=0.02)
-        ax.text(0.770, yy + 0.036, name, ha="center", va="center", fontsize=15, color=TEXT, weight="bold")
-    ax.text(0.700, 0.315, "Adaptive fusion reduces the\ninfluence of degraded inputs", fontsize=11.4, color=TEXT_MUTED, ha="left")
-    arrow(ax, (0.86, 0.50), (0.87, 0.50), color=FUSION, lw=3.0)
-    round_box(ax, 0.87, 0.39, 0.11, 0.18, face="#f8fbf8", edge=SUCCESS, lw=1.8, radius=0.02)
-    ax.text(0.925, 0.515, "Final detection\nscore", ha="center", va="center", fontsize=16, color=SUCCESS, weight="bold")
-    ax.text(0.925, 0.435, "UAV / Not UAV", ha="center", va="center", fontsize=11.0, color=TEXT, weight="bold")
+        yy = 0.55 - i * 0.12
+        round_box(ax, 0.72, yy, 0.14, 0.078, face=BG_SOFT, edge=color, lw=1.6, radius=0.022)
+        ax.text(0.79, yy + 0.039, name, ha="center", va="center", fontsize=15, color=TEXT, weight="bold")
+    ax.text(0.715, 0.235, "Adaptive fusion reduces the\ninfluence of degraded inputs", fontsize=11.0, color=TEXT_MUTED, ha="left")
+    arrow(ax, (0.87, 0.44), (0.89, 0.44), color=FUSION, lw=3.0)
+    round_box(ax, 0.89, 0.34, 0.09, 0.22, face="#f8fbf8", edge=SUCCESS, lw=1.9, radius=0.022)
+    ax.text(0.935, 0.48, "Final detection\nscore", ha="center", va="center", fontsize=15.5, color=SUCCESS, weight="bold")
+    ax.text(0.935, 0.395, "UAV / Not UAV", ha="center", va="center", fontsize=10.8, color=TEXT, weight="bold")
     save(fig, "04_system_architecture")
 
 
