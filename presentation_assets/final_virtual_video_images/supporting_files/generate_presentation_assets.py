@@ -228,8 +228,8 @@ def pill(ax: plt.Axes, x: float, y: float, text: str, face: str, edge: str | Non
     ax.text(x + width / 2, y + 0.02, text, ha="center", va="center", fontsize=size, color=color, weight="bold")
 
 
-def card_label(ax: plt.Axes, x: float, y: float, text: str, accent: str) -> None:
-    pill(ax, x, y, text, face=accent, color="white", size=11)
+def card_label(ax: plt.Axes, x: float, y: float, text: str, accent: str, size: float = 11) -> None:
+    pill(ax, x, y, text, face=accent, color="white", size=size)
 
 
 def icon_camera(ax: plt.Axes, cx: float, cy: float, scale: float, color: str) -> None:
@@ -352,10 +352,10 @@ def annotate(ax: plt.Axes, text: str, xy: tuple[float, float], xytext: tuple[flo
     ann.set_path_effects([pe.withStroke(linewidth=3, foreground="white")])
 
 
-def panel_shell(ax: plt.Axes, title: str, accent: str) -> None:
+def panel_shell(ax: plt.Axes, title: str, accent: str, title_size: float = 18) -> None:
     round_box(ax, 0.02, 0.04, 0.96, 0.92, face=CARD_BG, edge=BORDER, lw=1.6, radius=0.03)
     ax.add_patch(Rectangle((0.02, 0.90), 0.96, 0.06, facecolor=accent, edgecolor="none"))
-    ax.text(0.05, 0.93, title, ha="left", va="center", fontsize=18, color="white", weight="bold")
+    ax.text(0.05, 0.93, title, ha="left", va="center", fontsize=title_size, color="white", weight="bold")
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.axis("off")
@@ -427,70 +427,102 @@ def draw_system_overview() -> None:
     save(fig, "01_system_overview")
 
 
-def draw_vision_panel(ax: plt.Axes, drone_img: Image.Image, bird_img: Image.Image) -> None:
-    panel_shell(ax, "Vision challenge", VISION)
-    left = ax.inset_axes([0.07, 0.26, 0.39, 0.54])
-    right = ax.inset_axes([0.54, 0.26, 0.39, 0.54])
+def draw_vision_panel(ax: plt.Axes, drone_img: Image.Image, bird_img: Image.Image, compact: bool = False) -> None:
+    panel_shell(ax, "Vision challenge", VISION, title_size=15 if compact else 18)
+    if compact:
+        left = ax.inset_axes([0.07, 0.35, 0.39, 0.35])
+        right = ax.inset_axes([0.54, 0.35, 0.39, 0.35])
+        card_label(ax, 0.07, 0.80, "Drone", VISION, size=9.5)
+        card_label(ax, 0.54, 0.80, "Bird", SLATE_DARK, size=9.5)
+        annotate(ax, "distant object", (0.24, 0.48), (0.08, 0.16), VISION, size=9.4)
+        annotate(ax, "low detail", (0.26, 0.50), (0.21, 0.11), VISION, size=9.2)
+        annotate(ax, "similar distant\nsilhouette", (0.70, 0.47), (0.53, 0.16), SLATE_DARK, size=9.0)
+        annotate(ax, "false positive risk", (0.69, 0.47), (0.74, 0.11), RED, size=9.1)
+        ax.text(
+            0.05,
+            0.075,
+            "Distant silhouettes can blur the class boundary.",
+            ha="left",
+            va="center",
+            fontsize=10.5,
+            color=TEXT_MUTED,
+        )
+    else:
+        left = ax.inset_axes([0.07, 0.26, 0.39, 0.54])
+        right = ax.inset_axes([0.54, 0.26, 0.39, 0.54])
+        card_label(ax, 0.09, 0.81, "Drone", VISION)
+        card_label(ax, 0.56, 0.81, "Bird", SLATE_DARK)
+        annotate(ax, "distant object", (0.24, 0.52), (0.09, 0.16), VISION)
+        annotate(ax, "low detail", (0.26, 0.54), (0.23, 0.11), VISION)
+        annotate(ax, "similar distant silhouette", (0.70, 0.53), (0.54, 0.16), SLATE_DARK)
+        annotate(ax, "false positive risk", (0.69, 0.53), (0.74, 0.11), RED)
+        ax.text(
+            0.05,
+            0.075,
+            "Distant silhouettes can blur the class boundary.",
+            ha="left",
+            va="center",
+            fontsize=12.5,
+            color=TEXT_MUTED,
+        )
     for iax, img in [(left, drone_img), (right, bird_img)]:
         iax.imshow(img)
         iax.axis("off")
-    card_label(ax, 0.09, 0.81, "Drone", VISION)
-    card_label(ax, 0.56, 0.81, "Bird", SLATE_DARK)
-    annotate(ax, "distant object", (0.24, 0.52), (0.09, 0.16), VISION)
-    annotate(ax, "low detail", (0.26, 0.54), (0.23, 0.11), VISION)
-    annotate(ax, "similar distant silhouette", (0.70, 0.53), (0.54, 0.16), SLATE_DARK)
-    annotate(ax, "false positive risk", (0.69, 0.53), (0.74, 0.11), RED)
-    ax.text(
-        0.05,
-        0.075,
-        "Distant silhouettes can blur the class boundary.",
-        ha="left",
-        va="center",
-        fontsize=12.5,
-        color=TEXT_MUTED,
-    )
 
 
-def draw_audio_panel(ax: plt.Axes, audio_array: np.ndarray, audio_meta: dict[str, object]) -> None:
-    panel_shell(ax, "Audio challenge", AUDIO)
-    spec_ax = ax.inset_axes([0.08, 0.24, 0.74, 0.60])
+def draw_audio_panel(ax: plt.Axes, audio_array: np.ndarray, audio_meta: dict[str, object], compact: bool = False) -> None:
+    panel_shell(ax, "Audio challenge", AUDIO, title_size=15 if compact else 18)
+    spec_ax = ax.inset_axes([0.08, 0.30, 0.70, 0.48] if compact else [0.08, 0.24, 0.74, 0.60])
     im = spec_ax.imshow(audio_array, origin="lower", aspect="auto", cmap="magma")
-    spec_ax.set_xlabel("Time", labelpad=0)
-    spec_ax.set_ylabel("Frequency")
+    spec_ax.set_xlabel("Time", labelpad=0, fontsize=11 if compact else 15)
+    spec_ax.set_ylabel("Frequency", fontsize=11 if compact else 15)
     spec_ax.set_xticks([0, 25, 50, 75, 100], labels=["0.0", "0.5", "1.0", "1.5", "2.0"])
     spec_ax.set_yticks([0, 32, 64, 96, 127], labels=["low", "", "", "", "high"])
-    cax = ax.inset_axes([0.85, 0.28, 0.03, 0.48])
+    spec_ax.tick_params(labelsize=9 if compact else 13, pad=1)
+    cax = ax.inset_axes([0.82, 0.34, 0.025, 0.34] if compact else [0.85, 0.28, 0.03, 0.48])
     cb = plt.colorbar(im, cax=cax)
-    cb.set_label("Intensity", fontsize=12)
-    annotate(ax, "target energy", (0.44, 0.68), (0.08, 0.11), AUDIO, size=11.0)
-    annotate(ax, "background noise", (0.21, 0.32), (0.30, 0.11), WARNING, size=11.0)
-    annotate(ax, "signal quality drops\nwith distance/noise", (0.55, 0.46), (0.56, 0.11), RED, size=10.6)
+    cb.set_label("Intensity", fontsize=10 if compact else 12)
+    cb.ax.tick_params(labelsize=8.5 if compact else 13)
+    if compact:
+        annotate(ax, "target energy", (0.42, 0.60), (0.08, 0.11), AUDIO, size=9.1)
+        annotate(ax, "background noise", (0.22, 0.34), (0.34, 0.11), WARNING, size=9.1)
+        annotate(ax, "signal quality drops\nwith distance/noise", (0.57, 0.44), (0.58, 0.12), RED, size=8.8)
+    else:
+        annotate(ax, "target energy", (0.44, 0.68), (0.08, 0.11), AUDIO, size=11.0)
+        annotate(ax, "background noise", (0.21, 0.32), (0.30, 0.11), WARNING, size=11.0)
+        annotate(ax, "signal quality drops\nwith distance/noise", (0.55, 0.46), (0.56, 0.11), RED, size=10.6)
     note = f"ep 003731 | Drone | SNR {float(audio_meta['audio_snr_db']):.1f} dB"
-    ax.text(0.08, 0.055, note, ha="left", va="center", fontsize=11.5, color=TEXT_MUTED)
+    ax.text(0.08, 0.055, note, ha="left", va="center", fontsize=9.8 if compact else 11.5, color=TEXT_MUTED)
 
 
-def draw_radar_panel(ax: plt.Axes, radar_array: np.ndarray, radar_meta: dict[str, object]) -> None:
-    panel_shell(ax, "Radar challenge", RADAR)
-    rd_ax = ax.inset_axes([0.08, 0.24, 0.74, 0.60])
+def draw_radar_panel(ax: plt.Axes, radar_array: np.ndarray, radar_meta: dict[str, object], compact: bool = False) -> None:
+    panel_shell(ax, "Radar challenge", RADAR, title_size=15 if compact else 18)
+    rd_ax = ax.inset_axes([0.08, 0.30, 0.70, 0.48] if compact else [0.08, 0.24, 0.74, 0.60])
     vmin = float(np.percentile(radar_array, 2))
     vmax = float(np.percentile(radar_array, 99))
     im = rd_ax.imshow(radar_array, origin="lower", aspect="auto", cmap="viridis", vmin=vmin, vmax=vmax)
-    rd_ax.set_xlabel("Doppler", labelpad=0)
-    rd_ax.set_ylabel("Range")
+    rd_ax.set_xlabel("Doppler", labelpad=0, fontsize=11 if compact else 15)
+    rd_ax.set_ylabel("Range", fontsize=11 if compact else 15)
     rd_ax.set_xticks([0, 32, 64, 96, 127], labels=["neg.", "", "0", "", "pos."])
     rd_ax.set_yticks([0, 32, 64, 96, 127], labels=["near", "", "", "", "far"])
-    cax = ax.inset_axes([0.85, 0.28, 0.03, 0.48])
+    rd_ax.tick_params(labelsize=9 if compact else 13, pad=1)
+    cax = ax.inset_axes([0.82, 0.34, 0.025, 0.34] if compact else [0.85, 0.28, 0.03, 0.48])
     cb = plt.colorbar(im, cax=cax)
-    cb.set_label("Intensity", fontsize=12)
-    annotate(ax, "target return", (0.45, 0.46), (0.11, 0.11), RADAR, size=11.0)
-    annotate(ax, "clutter / interference", (0.35, 0.34), (0.58, 0.11), RED, size=10.6)
+    cb.set_label("Intensity", fontsize=10 if compact else 12)
+    cb.ax.tick_params(labelsize=8.5 if compact else 13)
+    if compact:
+        annotate(ax, "target return", (0.45, 0.44), (0.10, 0.11), RADAR, size=9.1)
+        annotate(ax, "clutter / interference", (0.36, 0.34), (0.61, 0.11), RED, size=8.8)
+    else:
+        annotate(ax, "target return", (0.45, 0.46), (0.11, 0.11), RADAR, size=11.0)
+        annotate(ax, "clutter / interference", (0.35, 0.34), (0.58, 0.11), RED, size=10.6)
     ax.text(
         0.08,
         0.055,
         f"ep 003737 | Drone | clutter {float(radar_meta['radar_clutter_level']):.2f}",
         ha="left",
         va="center",
-        fontsize=11.5,
+        fontsize=9.8 if compact else 11.5,
         color=TEXT_MUTED,
     )
 
@@ -510,17 +542,17 @@ def draw_modality_challenges(data: dict[str, object]) -> None:
 
     fig = plt.figure(figsize=FIGSIZE, dpi=DPI, facecolor="white")
     axes = [
-        fig.add_axes([0.02, 0.14, 0.30, 0.74]),
-        fig.add_axes([0.35, 0.14, 0.30, 0.74]),
-        fig.add_axes([0.68, 0.14, 0.30, 0.74]),
+        fig.add_axes([0.02, 0.09, 0.30, 0.82]),
+        fig.add_axes([0.35, 0.09, 0.30, 0.82]),
+        fig.add_axes([0.68, 0.09, 0.30, 0.82]),
     ]
     for axis in axes:
         axis.set_xlim(0, 1)
         axis.set_ylim(0, 1)
         axis.axis("off")
-    draw_vision_panel(axes[0], data["vision_drone"], data["vision_bird"])
-    draw_audio_panel(axes[1], data["audio_array"], data["audio_episode"])
-    draw_radar_panel(axes[2], data["radar_array"], data["radar_episode"])
+    draw_vision_panel(axes[0], data["vision_drone"], data["vision_bird"], compact=True)
+    draw_audio_panel(axes[1], data["audio_array"], data["audio_episode"], compact=True)
+    draw_radar_panel(axes[2], data["radar_array"], data["radar_episode"], compact=True)
     fig.savefig(PNG_DIR / "02_modality_challenges_combined.png", dpi=DPI, facecolor="white")
     fig.savefig(SVG_DIR / "02_modality_challenges_combined.svg", facecolor="white")
     plt.close(fig)
