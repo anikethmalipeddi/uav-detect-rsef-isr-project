@@ -696,8 +696,8 @@ def draw_false_alarm_and_stress(data: dict[str, object]) -> None:
     after = radar_fgate.iloc[-1]
 
     fig = plt.figure(figsize=FIGSIZE, dpi=DPI, facecolor="white")
-    ax = fig.add_axes([0.07, 0.14, 0.60, 0.72])
-    inset_ax = fig.add_axes([0.72, 0.16, 0.23, 0.68])
+    ax = fig.add_axes([0.07, 0.14, 0.58, 0.72])
+    inset_ax = fig.add_axes([0.69, 0.11, 0.27, 0.75])
     inset_ax.axis("off")
 
     ax.set_title("Episode-level TEST false alarm rate at threshold 0.5", loc="left", pad=16, color=TEXT, fontweight="bold")
@@ -715,37 +715,54 @@ def draw_false_alarm_and_stress(data: dict[str, object]) -> None:
     ax.spines["left"].set_color(BORDER)
     ax.spines["bottom"].set_color(BORDER)
 
-    round_box(inset_ax, 0.02, 0.52, 0.96, 0.43, face="#f9fbfd", edge=RADAR, lw=1.8)
-    inset_ax.text(0.07, 0.88, "Stress Test: Radar Clutter (F-GATE)", fontsize=15, color=TEXT, weight="bold")
+    round_box(inset_ax, 0.02, 0.27, 0.96, 0.68, face="#f9fbfd", edge=RADAR, lw=1.8)
+    inset_ax.text(0.08, 0.90, "Stress test: radar clutter", fontsize=13.6, color=TEXT, weight="bold")
+    inset_ax.text(0.08, 0.85, "F-GATE quality-aware fusion", fontsize=11.2, color=TEXT_MUTED)
     image_thumbnail(
         inset_ax,
-        [0.08, 0.60, 0.34, 0.20],
+        [0.09, 0.60, 0.34, 0.22],
         data["radar_array"],
         cmap="viridis",
         vmin=float(np.percentile(data["radar_array"], 2)),
         vmax=float(np.percentile(data["radar_array"], 99)),
     )
-    bar_ax = inset_ax.inset_axes([0.48, 0.58, 0.42, 0.22])
+    bar_ax = inset_ax.inset_axes([0.50, 0.58, 0.39, 0.25])
     vals = [float(before["pr_auc"]), float(after["pr_auc"])]
     xpos = np.array([0.0, 1.0], dtype=float)
     bar_ax.bar(xpos, vals, color=[FUSION, "#8dbcc3"], edgecolor="#4a5b69", linewidth=0.8, width=0.55)
     bar_ax.set_ylim(0.86, 0.90)
-    bar_ax.set_ylabel("PR-AUC", fontsize=10)
-    bar_ax.set_xlabel("Clutter level", fontsize=10)
+    bar_ax.set_title("PR-AUC", fontsize=10, pad=4, color=TEXT)
+    bar_ax.set_ylabel("")
+    bar_ax.set_xlabel("Clutter level", fontsize=9, labelpad=2)
     bar_ax.set_xticks(xpos, labels=["0.1", "0.9"])
-    bar_ax.tick_params(labelsize=10)
+    bar_ax.tick_params(labelsize=9)
     bar_ax.grid(axis="y", color=GRID, lw=0.8)
     bar_ax.set_axisbelow(True)
     for x, v in zip(xpos, vals):
-        bar_ax.text(x, v + 0.001, f"{v:.3f}", ha="center", va="bottom", fontsize=10, weight="bold", color=TEXT)
-    inset_ax.text(0.08, 0.54, f"Before: {float(before['pr_auc']):.3f}  at clutter {float(before['clutter_level']):.1f}", fontsize=12.5, color=TEXT)
-    inset_ax.text(0.08, 0.49, f"After:  {float(after['pr_auc']):.3f}  at clutter {float(after['clutter_level']):.1f}", fontsize=12.5, color=TEXT)
-    inset_ax.text(0.08, 0.43, f"Delta: {float(after['pr_auc'] - before['pr_auc']):+.3f} PR-AUC", fontsize=13.5, color=RADAR, weight="bold")
-    inset_ax.text(0.08, 0.37, "Modest degradation under clutter\nwhile the radar return remains visible.", fontsize=11.2, color=TEXT_MUTED)
+        bar_ax.text(x, v + 0.001, f"{v:.3f}", ha="center", va="bottom", fontsize=9.3, weight="bold", color=TEXT)
 
-    round_box(inset_ax, 0.02, 0.12, 0.96, 0.18, face="#f8fbf8", edge=SUCCESS, lw=1.4)
-    inset_ax.text(0.07, 0.22, "Lowest FAR in the compared set", fontsize=14, color=TEXT, weight="bold")
-    inset_ax.text(0.07, 0.155, f"F-STATIC: {float(perf.loc[perf['Model']=='F-STATIC', 'FAR'].iloc[0] * 100):.1f}%", fontsize=19, color=SUCCESS, weight="bold")
+    round_box(inset_ax, 0.08, 0.43, 0.38, 0.10, face="white", edge=BORDER, lw=1.2, radius=0.02)
+    inset_ax.text(0.11, 0.49, "Before", fontsize=10.5, color=TEXT_MUTED, weight="bold")
+    inset_ax.text(0.11, 0.445, f"{float(before['pr_auc']):.3f} at clutter {float(before['clutter_level']):.1f}", fontsize=11.5, color=TEXT)
+
+    round_box(inset_ax, 0.52, 0.43, 0.38, 0.10, face="white", edge=BORDER, lw=1.2, radius=0.02)
+    inset_ax.text(0.55, 0.49, "After", fontsize=10.5, color=TEXT_MUTED, weight="bold")
+    inset_ax.text(0.55, 0.445, f"{float(after['pr_auc']):.3f} at clutter {float(after['clutter_level']):.1f}", fontsize=11.5, color=TEXT)
+
+    round_box(inset_ax, 0.08, 0.33, 0.82, 0.07, face="#eef2ff", edge=RADAR, lw=1.2, radius=0.02)
+    inset_ax.text(0.10, 0.365, f"Delta: {float(after['pr_auc'] - before['pr_auc']):+.3f} PR-AUC", fontsize=12.8, color=RADAR, weight="bold")
+    inset_ax.text(
+        0.08,
+        0.292,
+        "Modest degradation under clutter\nwhile the radar return remains visible.",
+        fontsize=10.6,
+        color=TEXT_MUTED,
+        va="center",
+    )
+
+    round_box(inset_ax, 0.02, 0.06, 0.96, 0.16, face="#f8fbf8", edge=SUCCESS, lw=1.4)
+    inset_ax.text(0.07, 0.145, "Lowest FAR in the compared set", fontsize=13.5, color=TEXT, weight="bold")
+    inset_ax.text(0.07, 0.09, f"F-STATIC: {float(perf.loc[perf['Model']=='F-STATIC', 'FAR'].iloc[0] * 100):.1f}%", fontsize=18.0, color=SUCCESS, weight="bold")
     save(fig, "06_false_alarm_and_stress")
 
 
