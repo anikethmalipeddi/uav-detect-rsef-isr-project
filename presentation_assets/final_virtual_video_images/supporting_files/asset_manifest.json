@@ -1,0 +1,114 @@
+{
+  "asset_root": "presentation_assets/final_virtual_video_images",
+  "selected_inputs": {
+    "vision_drone_IR_DRONE_059_f000112_DRONE.png": {
+      "source_path": "final_isef_package/verification/IR_DRONE_059_f000112_DRONE.png",
+      "note": "Verified IR drone frame used in the vision ambiguity panel."
+    },
+    "vision_bird_IR_BIRD_010_f000043_BIRD.png": {
+      "source_path": "final_isef_package/verification/IR_BIRD_010_f000043_BIRD.png",
+      "note": "Verified IR bird frame used as the confusing negative in the vision ambiguity panel."
+    },
+    "audio_DRONE_020_00000.npy": {
+      "source_path": "data/processed/audio_windows/DRONE_020_00000.npy",
+      "note": "Processed 128x101 log-mel spectrogram window selected from test episode 003731 (source_audio_label=Drone, audio_snr_db=-25.20)."
+    },
+    "radar_rd_00047495.npy": {
+      "source_path": "data/processed/radar_rd_real/rd_00047495.npy",
+      "note": "Processed 128x128 range-Doppler map selected from test episode 003737 (source_radar_label=Drone, radar_clutter_level=4.05)."
+    }
+  },
+  "figures": {
+    "01_system_overview": {
+      "type": "author_created_diagram",
+      "sources": [
+        "final_isef_package/README.md",
+        "final_isef_package/methodology_materials_updated.md"
+      ],
+      "scientific_point": "High-level multimodal system overview from vision, acoustic, and radar inputs to adaptive fusion and final UAV / Not UAV decision."
+    },
+    "02a_vision_challenge": {
+      "type": "project_derived_panel",
+      "sources": [
+        "final_isef_package/verification/IR_DRONE_059_f000112_DRONE.png",
+        "final_isef_package/verification/IR_BIRD_010_f000043_BIRD.png"
+      ],
+      "scientific_point": "Distant IR drone and bird silhouettes can create a difficult class boundary for vision-only detection."
+    },
+    "02b_audio_challenge": {
+      "type": "project_derived_panel",
+      "sources": [
+        "data/processed/audio_windows/DRONE_020_00000.npy",
+        "data/processed/episodes/episodes.csv (episode_id=003731)"
+      ],
+      "scientific_point": "Real low-SNR drone log-mel window showing target harmonics embedded in noise."
+    },
+    "02c_radar_challenge": {
+      "type": "project_derived_panel",
+      "sources": [
+        "data/processed/radar_rd_real/rd_00047495.npy",
+        "data/processed/episodes/episodes.csv (episode_id=003737)"
+      ],
+      "scientific_point": "Real cluttered range-Doppler map showing a visible target return plus interference structure."
+    },
+    "02_modality_challenges_combined": {
+      "type": "project_derived_composite",
+      "sources": [
+        "02a_vision_challenge",
+        "02b_audio_challenge",
+        "02c_radar_challenge"
+      ],
+      "scientific_point": "Why fusion matters: each single modality has credible failure modes under degraded sensing conditions."
+    },
+    "03_procedure_pipeline": {
+      "type": "author_created_diagram",
+      "sources": [
+        "final_isef_package/methodology_materials_updated.md"
+      ],
+      "scientific_point": "Compact high-level workflow used to build and evaluate the multimodal detector."
+    },
+    "04_system_architecture": {
+      "type": "mixed_diagram_with_project_thumbnails",
+      "sources": [
+        "final_isef_package/methodology_materials_updated.md",
+        "final_isef_package/methodology_assets/tables/method_table_M2.csv",
+        "final_isef_package/methodology_assets/tables/method_table_M3.csv",
+        "selected_project_inputs/*"
+      ],
+      "scientific_point": "Branch-level architecture, quality signals, and fusion comparison methods used in the project."
+    },
+    "05_prauc_results": {
+      "type": "project_derived_chart",
+      "sources": [
+        "final_isef_package/results_section/tables/R1_overall_test_performance.csv",
+        "final_isef_package/metadata/significance_pr_auc.txt"
+      ],
+      "scientific_point": "Exact episode-level TEST PR-AUC comparison across the best unimodal and fusion methods."
+    },
+    "06_false_alarm_and_stress": {
+      "type": "project_derived_chart_with_inset",
+      "sources": [
+        "final_isef_package/results_section/tables/R1_overall_test_performance.csv",
+        "final_isef_package/tables/stress_radar_clutter.csv",
+        "data/processed/radar_rd_real/rd_00047495.npy"
+      ],
+      "scientific_point": "Operational false alarm comparison plus exact F-GATE radar-clutter stress behavior."
+    },
+    "07_conclusion_summary_visual": {
+      "type": "author_created_diagram",
+      "sources": [
+        "final_isef_package/results_section/tables/R1_overall_test_performance.csv",
+        "final_isef_package/tables/stress_radar_clutter.csv"
+      ],
+      "scientific_point": "Conclusion synthesis: stronger detection, better robustness, and greater practicality."
+    },
+    "08_future_work_roadmap": {
+      "type": "author_created_diagram",
+      "sources": [
+        "final_isef_package/methodology_materials_updated.md",
+        "final_isef_package/README.md"
+      ],
+      "scientific_point": "Four concrete next-step milestones for extending the project toward deployment."
+    }
+  }
+}
