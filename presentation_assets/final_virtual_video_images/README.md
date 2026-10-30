@@ -1,6 +1,6 @@
-# Final Virtual Video Images
+# Presentation figures
 
-This folder contains the final presentation-ready figure assets for the ISR/RSEF virtual video, gathered in one place as PNG and SVG exports.
+PNG and SVG figures used in the ISR/RSEF presentation. The table maps each export to its source and suggested placement.
 
 ## Where to use each asset
 
@@ -33,5 +33,3 @@ Selected raw examples copied for traceability are in `selected_project_inputs/`.
 - `supporting_files/generate_presentation_assets.py`: reproducible asset-generation script
 - `supporting_files/asset_manifest.json`: compact asset/source manifest
 - `source_work/`: intermediate candidate sheets and working previews used during selection
-
-No `review_flags.md` was created because the final metrics and selected source files were resolved clearly enough to complete the figure set without leaving an unresolved conflict.

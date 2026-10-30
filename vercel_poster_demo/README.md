@@ -1,6 +1,6 @@
-# ISEF Demo (Next.js)
+# UAV web demo
 
-This folder contains the visual-first judge demo for multimodal UAV detection using precomputed outputs from the final run. The app is designed for a 60-120 second walkthrough showing: detector operation, fusion-vs-unimodal behavior on hard cases, and adaptive fusion weighting under degradation/missingness.
+A Next.js presentation of precomputed UAV detection results. It shows detections, modality scores, and fusion weights across clean and degraded scenarios. No model inference runs in the browser.
 
 Scenario visuals are deterministic condition variants of one base clip, while scores/weights come from precomputed final-run outputs.
 
@@ -64,4 +64,4 @@ Scenario visuals are deterministic condition variants of one base clip, while sc
 - `src/components/ScenarioSelector.tsx` - scenario selector pills
 - `src/components/AudioWaveform.tsx` - audio visual sample
 - `src/components/RadarSnapshot.tsx` - radar visual sample
-- `public/demo/scenarios.json` - curated scenario set (includes WOW cases)
+- `public/demo/scenarios.json` - scenario set

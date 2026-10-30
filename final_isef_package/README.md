@@ -1,28 +1,26 @@
-# ISEF Final Package
+# Final experiment package
 
-This package contains the final, curated artifacts for the condition-adaptive multimodal UAV detection project. The system fuses **vision**, **audio**, and **radar** evidence with adaptive gating and modality masking to detect UAV presence robustly under degradation and missing-modality conditions.
+Recorded results, figures, and provenance for the multimodal UAV detection project. The experiments combine vision, audio, and radar and evaluate fusion under degraded and missing-sensor conditions.
 
-## Reproduce Final Run
-1. Activate environment:
-   - `conda activate uavmm`
-2. Run end-to-end pipeline:
-   - `powershell -ExecutionPolicy Bypass -File .\run_all.ps1`
-3. Rebuild poster figures:
-   - `python tools/make_figures.py`
-4. Verify package completeness:
-   - `python tools/verify_isef_package.py`
+## Contents
 
-## Artifact Usage Map
-- `figures/`: poster and presentation plots (performance, robustness, gating, latency, qualitative).
-- `tables/` and `metrics/`: numeric tables for poster text and claims.
-- `demo/`: CPU-friendly offline demo for judges (macOS M2 + Windows).
-- `provenance/`: reproducibility metadata (environment, data manifest, run metadata).
-- `logs/`: final run and package verification logs.
+- `figures/` — performance, robustness, gating, latency, and example plots
+- `tables/` and `metrics/` — numeric results
+- `demo/` — a CPU replay demo with packaged assets
+- `provenance/`, `metadata/`, and `verification/` — run records and checks
+- `logs/` — experiment and packaging logs
 
-## Hardware / Software Summary
-- Machine: `DESKTOP-RLP7CRM`
-- OS: `Windows-10-10.0.26200-SP0`
-- Python: `3.11.14 | packaged by conda-forge | (main, Jan 26 2026, 23:39:55) [MSC v.1944 64 bit (AMD64)]`
-- Torch: `2.10.0+cu128`
-- CUDA: `12.8`
-- GPU: `NVIDIA GeForce RTX 5070 Ti`
+[`README_CHECKLIST.txt`](README_CHECKLIST.txt) records the packaged run and selected configuration. Raw and processed datasets are not included in this folder.
+
+## Rebuild
+
+From the repository root, with the datasets and `uavmm` environment ready:
+
+```powershell
+conda activate uavmm
+powershell -ExecutionPolicy Bypass -File .\run_all.ps1
+python tools/make_figures.py
+python tools/verify_isef_package.py
+```
+
+The recorded run used Windows, Python 3.11.14, PyTorch 2.10.0+cu128, CUDA 12.8, and an NVIDIA GeForce RTX 5070 Ti. Consult the metadata files for the full environment and data state.

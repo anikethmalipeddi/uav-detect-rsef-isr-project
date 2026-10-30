@@ -1,157 +1,43 @@
-# UAV-MM: Condition-Adaptive Multimodal UAV Detection
+# UAV-MM
 
-Offline, reproducible week-1 implementation for multimodal UAV presence detection with vision, audio, and radar signals.
+A research project on detecting drones by combining vision, audio, and radar. It compares individual sensor models with fixed and condition-adaptive fusion, including degraded and missing-sensor cases.
 
-## Scope
-- Windows-native workflow.
-- Core datasets only in week 1:
-  - DroneDetectionThesis (vision + audio)
-  - TSMS Drone dataset (radar)
-- Includes a lightweight cross-platform ISEF demo app:
-  - `Poster Mode` (offline replay, no weights)
-  - `Full Mode` (optional local weights in `models/`, auto-fallback)
+[View the demo](https://uav-detect-rsef-isr-project.vercel.app)
 
-## Project Layout
-```text
-data/
-  raw/
-  processed/
-results/
-experiments/
-src/
-  preprocess/
-  datasets/
-  models/
-  train/
-  eval/
-  utils/
+The training pipeline uses DroneDetectionThesis for vision and audio, and the TSMS drone dataset for radar. Results, figures, and run metadata are included in [`final_isef_package/`](final_isef_package/). The browser demo replays precomputed outputs; it does not run live inference.
+
+## Try the local demo
+
+The Streamlit demo runs without model weights in Poster Mode:
+
+```sh
+conda env create -f environment_demo.yml
+conda activate uav-demo
 ```
 
-## Environment Setup (Windows)
-1. Install Miniforge.
-2. Create environment:
-   ```powershell
-   conda env create -f environment.yml
-   conda activate uavmm
-   ```
-3. Verify CUDA:
-   ```powershell
-   nvidia-smi
-   python -c "import torch; print(torch.__version__, torch.cuda.is_available(), torch.cuda.get_device_name(0))"
-   ```
+On macOS, run `bash scripts/run_demo.sh`. On Windows, run `powershell -ExecutionPolicy Bypass -File scripts/run_demo.ps1`.
 
-Note: `radarsimpy` is not pinned in `environment.yml` because Windows wheels are not consistently available. The default pipeline in `run_all.ps1` uses only real TSMS radar data and fails on missing required data.
+[Demo instructions](docs/README_DEMO.md) cover optional local inference, controls, and verification. The separate [Next.js demo](vercel_poster_demo/README.md) is used for the web presentation.
 
-## One-Command Run (Fail-Fast)
-Run the full end-to-end pipeline from repo root:
+## Reproduce the experiments
+
+The training workflow targets Windows with Conda and CUDA. Download the datasets separately into `data/raw/dronedetect_thesis` and `data/raw/tsms_drone`.
 
 ```powershell
+conda env create -f environment.yml
+conda activate uavmm
 powershell -ExecutionPolicy Bypass -File .\run_all.ps1
 ```
 
-What this script enforces:
-- strict TSMS verification (`results/tsms_state.txt`, `results/tsms_state.json`)
-- full DroneDetectionThesis label conversion + overlays + label stats
-- split integrity check (`results/split_integrity_report.txt`)
-- unimodal + fusion training and evaluation
-- explicit fusion-advantage check (`results/fusion_advantage_check.txt`) that fails if `F-GATE` does not beat `F-AVG` and `F-STATIC` on test PR-AUC
-- required tables, stress tests, figures, significance, and run metadata
-- immediate failure on missing artifacts or invalid intermediate outputs
+The pipeline checks data and split integrity, trains the models, and writes evaluation artifacts to `results/`. It stops if required data or checks are missing. See [pipeline details](docs/PIPELINE.md) for individual commands, expected outputs, and reproducibility notes.
 
-Fast validation only:
-```powershell
-powershell -ExecutionPolicy Bypass -File .\scripts\run_sanity.ps1
-```
+## Repository guide
 
-## Live Demo (Windows + macOS M2)
-- Demo app source: `demo_app/app.py`
-- Demo instructions: `docs/README_DEMO.md`
-- Windows:
-  ```powershell
-  conda env create -f environment_demo.yml
-  conda activate uav-demo
-  powershell -ExecutionPolicy Bypass -File .\scripts\run_demo.ps1
-  ```
-- macOS:
-  ```bash
-  conda env create -f environment_demo.yml
-  conda activate uav-demo
-  bash scripts/run_demo.sh
-  ```
+- `src/` — preprocessing, datasets, models, training, and evaluation
+- `experiments/` — experiment settings
+- `demo_app/` — local Streamlit demo
+- `vercel_poster_demo/` — web demo
+- `final_isef_package/` — packaged results, figures, and provenance
+- `presentation_assets/` — presentation exports and their source manifest
 
-## Vercel Poster Mode
-- Static Poster Mode app (no live inference): `vercel_poster_demo/`
-- Build/update poster-mode JSON assets from final package:
-  ```powershell
-  C:\Users\Aniketh\miniforge3\envs\uavmm\python.exe tools/build_vercel_poster_assets.py
-  ```
-- Deploy on Vercel using root `vercel.json`.
-- Local static preview:
-  ```powershell
-  python -m http.server 8080
-  ```
-  Open `http://localhost:8080/vercel_poster_demo/`.
-
-## Data Setup
-1. Clone DroneDetectionThesis into `data/raw/dronedetect_thesis`.
-2. Download TSMS data into `data/raw/tsms_drone`.
-
-The scripts expect raw data under these exact folders.
-
-For TSMS full download with resume support:
-```powershell
-powershell -ExecutionPolicy Bypass -File scripts/download_tsms_full.ps1 -Root data/raw/tsms_drone
-```
-
-## Day 1-2 Pipeline Commands
-```powershell
-python -m src.preprocess.inspect_mat --mat data/raw/dronedetect_thesis/Data/Video_V/V_DRONE_001_LABELS.mat
-python -m src.preprocess.extract_frames --input data/raw/dronedetect_thesis/Data/Video_V --output data/processed/vision_frames --fps 10
-python -m src.preprocess.extract_frames --input data/raw/dronedetect_thesis/Data/Video_IR --output data/processed/vision_frames --fps 10
-python -m src.preprocess.audio_windows --input data/raw/dronedetect_thesis/Data/Audio --output data/processed/audio_windows
-python -m src.preprocess.radar_extract_tsms --input data/raw/tsms_drone --output data/processed/radar_rd
-python -m src.datasets.episode_builder --vision-manifest data/processed/vision_frames/manifest.csv --audio-manifest data/processed/audio_windows/manifest.csv --radar-manifest data/processed/radar_rd/manifest.csv --out data/processed/episodes/episodes.csv --target-count 2000
-```
-
-## Training Commands
-```powershell
-python -m src.train.train_vision_yolo --data data/processed/vision_yolo/dataset.yaml --model yolov8n.pt --epochs 200
-python -m src.train.train_audio --episodes data/processed/episodes/episodes.csv
-python -m src.train.train_radar --episodes data/processed/episodes/episodes.csv
-python -m src.train.export_vision_presence --episodes data/processed/episodes/episodes.csv
-python -m src.train.train_fusion --episodes data/processed/episodes/episodes.csv --features data/processed/episodes/features_cache.npz
-```
-
-## Evaluation Commands
-```powershell
-python -m src.eval.eval_unimodal --episodes data/processed/episodes/episodes.csv
-python -m src.eval.ablations --episodes data/processed/episodes/episodes.csv --features data/processed/episodes/features_cache.npz
-python -m src.eval.missing_modality --episodes data/processed/episodes/episodes.csv --features data/processed/episodes/features_cache.npz
-python -m src.eval.stress_tests --episodes data/processed/episodes/episodes.csv --features data/processed/episodes/features_cache.npz
-```
-
-## Required Output Artifacts
-- `results/metrics_unimodal.csv`
-- `results/metrics_fusion.csv`
-- `results/ablation_table.csv`
-- `results/missing_modality.csv`
-- `results/stress_audio_snr.csv`
-- `results/stress_vision_corruptions.csv`
-- `results/stress_radar_clutter.csv`
-- `results/latency_summary.json`
-- `results/predictions_fusion.csv`
-- `results/significance_pr_auc.txt`
-- `results/fusion_advantage_check.txt`
-- `results/split_integrity_report.txt`
-- `results/run_metadata.json`
-
-## Reproducibility
-- Set fixed seeds with `src.utils.seed.set_seed`.
-- Keep train/val/test split fixed in `episodes.csv`.
-- Record commit hash for final runs:
-  ```powershell
-  git rev-parse HEAD
-  ```
-- Run metadata is written to `results/run_metadata.json` with machine, torch/cuda, git hash, dataset state, and warnings.
-
-
+Use the recorded metrics and run metadata when describing results. Replay visuals and synthetic degradation scenarios should not be presented as new live measurements.
